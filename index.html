@@ -303,17 +303,33 @@
 
   <script>
     // 🧙 Fetch characters
-    fetch('/api/characters')
-      .then(res => res.json())
-      .then(data => {
+    fetch('/api/characters') // Or '/items', '/packs', etc.
+      .then(res => {
+        // First, check if the network response is ok
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(records => { // 'records' is the array from Airtable
         const list = document.getElementById('character-list');
-        data.characters.forEach(name => {
+
+        // Check if the list is empty
+        if (records.length === 0) {
+          list.innerHTML = "<li>No characters found!</li>";
+          return;
+        }
+
+        // Loop through the array of record OBJECTS
+        records.forEach(record => { 
           const li = document.createElement('li');
-          li.textContent = name;
+          // Get the 'Name' from the 'fields' object
+          li.textContent = record.fields.Name; 
           list.appendChild(li);
         });
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error('Failed to load characters:', err);
         const list = document.getElementById('character-list');
         list.innerHTML = "<li style='color:#e66;'>Error loading data</li>";
       });
