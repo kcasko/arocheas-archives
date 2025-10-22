@@ -302,9 +302,9 @@
   <audio id="bg-music" loop preload="auto" src="https://github.com/kcasko/arocheaplays/raw/refs/heads/main/assets/audio/whispering-stars.mp3"></audio>
 
   <script>
-    // 🧙 Fetch characters
-    fetch('/api/characters') // Or '/items', '/packs', etc.
-      .then(res => {
+    // 🧙 Fetch items
+    fetch('/api/items') // Or '/items', '/packs', etc.
+      .then(res => {
         // First, check if the network response is ok
         if (!res.ok) {
           throw new Error(`HTTP error! Status: ${res.status}`);
