@@ -1,9 +1,9 @@
 export async function onRequestGet(context) {
   const token = context.env.AIRTABLE_TOKEN;
-  const baseId = "appGLH5ssrexQKhX2";
-  const tableName = "Games"; // ✅ matches your Airtable table name exactly
+  const baseId = "appGLH5ssrexQKhX2"; // Your Airtable base ID
+  const tableName = "1. Games"; // ✅ Exact table name with the number and period
 
-  // ✅ Updated field names
+  // ✅ Correct URL for your table and field names
   const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}?fields[]=2.%20Packs&fields[]=3.%20Items`;
 
   try {
@@ -20,7 +20,6 @@ export async function onRequestGet(context) {
 
     const data = await res.json();
 
-    // ✅ Build the output using the correct fields
     const packs = data.records.map(record => ({
       name: record.fields["2. Packs"] || "Unnamed Pack",
       items: record.fields["3. Items"]
@@ -31,7 +30,6 @@ export async function onRequestGet(context) {
     return new Response(JSON.stringify({ packs }), {
       headers: { "Content-Type": "application/json" }
     });
-
   } catch (error) {
     console.error(error);
     return new Response(JSON.stringify({ error: "Unexpected error" }), {
