@@ -5,301 +5,199 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Arochea’s Archives</title>
 
-  <!-- 🌸 Meta & SEO -->
   <meta name="description" content="Arochea’s Archives — a cozy corner of the Arochea world where stories, characters, and memories are preserved with love.">
   <meta property="og:title" content="Arochea’s Archives">
   <meta property="og:description" content="A cozy corner of the Arochea world where stories, characters, and memories are preserved with love.">
   <meta property="og:image" content="https://www.arocheaplays.com/assets/og-image.jpg">
   <meta name="theme-color" content="#e2baff">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Quicksand', 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #ffd9ec 0%, #e2baff 50%, #cde4ff 100%);
-      background-size: 200% 200%;
-      animation: bgShift 20s ease infinite;
-      color: #444;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 60px 20px;
-      text-align: center;
-      position: relative;
-      overflow-x: hidden;   /* ✅ prevents horizontal scroll */
-      overflow-y: auto;     /* ✅ allows vertical scroll */
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Quicksand','Poppins',sans-serif;
+      background:linear-gradient(135deg,#ffd9ec 0%,#e2baff 50%,#cde4ff 100%);
+      background-size:200% 200%;animation:bgShift 20s ease infinite;
+      color:#444;display:flex;flex-direction:column;align-items:center;
+      min-height:100vh;padding:60px 20px;text-align:center;overflow-x:hidden;overflow-y:auto
     }
-
-    @keyframes bgShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    h1{font-size:3.2rem;font-weight:900;letter-spacing:1px;
+      background:linear-gradient(90deg,#fff4fc,#ffe2fb,#f5d6ff,#e2baff);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      text-shadow:0 2px 0 #f9b8e3,0 4px 0 #f3a8d9,0 4px 6px rgba(0,0,0,.25),0 0 12px rgba(255,182,255,.7);
+      animation:floatTitle 6s ease-in-out infinite alternate,bubblePulse 3s ease-in-out infinite;z-index:3;margin-bottom:10px}
+    @keyframes floatTitle{from{transform:translateY(0)}to{transform:translateY(-5px)}}
+    @keyframes bubblePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+    p.subtitle{font-size:1.15rem;font-weight:600;
+      background:linear-gradient(90deg,#a86aff,#ff84d6,#ffc2eb);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      -webkit-text-stroke:.6px rgba(0,0,0,.5);
+      text-shadow:0 2px 5px rgba(0,0,0,.25),0 0 12px rgba(255,255,255,.6);
+      margin:15px auto 35px auto;max-width:700px;line-height:1.6;text-align:center;z-index:3}
+    .search-card{background:rgba(255,255,255,0.95);border-radius:22px;padding:20px 25px 25px;
+      box-shadow:0 6px 25px rgba(0,0,0,0.05);backdrop-filter:blur(10px);
+      max-width:700px;width:100%;margin-bottom:30px;z-index:3}
+    .search-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+    #search-input,#category-select,#reset-btn{
+      padding:10px 18px;border-radius:25px;border:none;outline:none;
+      background:rgba(255,255,255,0.85);box-shadow:0 4px 14px rgba(0,0,0,0.05);
+      font-size:1rem;color:#6a4c93;transition:all .25s ease
     }
-
-    .sparkle {
-      position: absolute;
-      border-radius: 50%;
-      animation: floatUp 14s linear infinite;
-      pointer-events: none;
-      opacity: 0.9;
-      filter: blur(0.4px);
-    }
-
-    @keyframes floatUp {
-      0% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 0.8; }
-      100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
-    }
-
-    .heart {
-      position: absolute;
-      font-size: 24px;
-      color: #ff9acb;
-      opacity: 0.7;
-      animation: floatHeart 12s ease-in infinite;
-      pointer-events: none;
-      text-shadow: 0 0 12px rgba(255, 165, 200, 0.7);
-      filter: drop-shadow(0 0 6px rgba(255, 150, 200, 0.5));
-    }
-
-    @keyframes floatHeart {
-      0% { transform: translateY(100vh) translateX(0) scale(0.8); opacity: 0.7; }
-      50% { transform: translateY(50vh) translateX(20px) scale(1); opacity: 0.9; }
-      100% { transform: translateY(-10vh) translateX(-20px) scale(1.2); opacity: 0; }
-    }
-
-    .aura {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.25) 0%, transparent 70%);
-      animation: glowPulse 8s ease-in-out infinite alternate;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    @keyframes glowPulse {
-      from { opacity: 0.3; transform: scale(1); }
-      to { opacity: 0.6; transform: scale(1.05); }
-    }
-
-    h1 {
-      font-size: 3.2rem;
-      font-weight: 900;
-      letter-spacing: 1px;
-      background: linear-gradient(90deg, #fff4fc, #ffe2fb, #f5d6ff, #e2baff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4);
-      text-shadow:
-        0 2px 0 #f9b8e3,
-        0 4px 0 #f3a8d9,
-        0 4px 6px rgba(0, 0, 0, 0.25),
-        0 0 12px rgba(255, 182, 255, 0.7);
-      animation: fadeIn 1.5s ease forwards, floatTitle 6s ease-in-out infinite alternate, bubblePulse 3s ease-in-out infinite;
-      z-index: 3;
-      margin-bottom: 10px;
-    }
-
-    @keyframes floatTitle { from { transform: translateY(0); } to { transform: translateY(-5px); } }
-    @keyframes bubblePulse {
-      0%,100% { transform: scale(1); }
-      50% { transform: scale(1.06); }
-    }
-
-    p.subtitle {
-      font-size: 1.15rem;
-      font-weight: 600;
-      background: linear-gradient(90deg, #a86aff, #ff84d6, #ffc2eb);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      -webkit-text-stroke: 0.6px rgba(0, 0, 0, 0.5);
-      text-shadow:
-        0 2px 5px rgba(0, 0, 0, 0.25),
-        0 0 12px rgba(255, 255, 255, 0.6);
-      margin: 15px auto 45px auto; /* ✅ centers text and adds even spacing */
-      max-width: 700px;
-      line-height: 1.6; /* ✅ better readability */
-      text-align: center; /* ✅ ensures perfect center alignment */
-      z-index: 3;
-      opacity: 1;
-      animation: shimmer 5s ease-in-out infinite alternate;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 22px;
-      padding: 30px 40px;
-      box-shadow: 0 6px 25px rgba(0,0,0,0.05);
-      backdrop-filter: blur(10px);
-      max-width: 700px;
-      width: 100%;
-      margin-bottom: 30px;
-      z-index: 3;
-      animation: fadeInUp 1.5s ease;
-    }
-
-    ul {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    li {
-      background: #fff;
-      border-radius: 12px;
-      padding: 12px 20px;
-      font-weight: 500;
-      color: #6a4c93;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    li:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-    }
-
-    footer { margin-top: auto; font-size: 0.85rem; color: #6a4c93; padding: 40px 0 10px; opacity: 0.8; z-index: 3; }
-
-    #music-toggle {
-      position: fixed; bottom: 20px; right: 20px; width: 55px; height: 55px;
-      border-radius: 50%; background: linear-gradient(135deg, #ffb6d9, #e2baff);
-      box-shadow: 0 0 10px rgba(255, 170, 220, 0.7);
-      border: none; color: #fff; font-size: 22px; cursor: pointer;
-      z-index: 5; transition: transform 0.2s ease, box-shadow 0.3s ease;
-    }
-
-    #music-toggle:hover { transform: scale(1.1); box-shadow: 0 0 15px rgba(255, 170, 220, 0.9); }
-    #music-toggle.active { box-shadow: 0 0 20px rgba(255, 200, 230, 1); background: linear-gradient(135deg, #ff91c9, #d1b6ff); }
+    #search-input:focus,#category-select:focus{background:#fff;box-shadow:0 0 12px rgba(226,186,255,0.6)}
+    #reset-btn{cursor:pointer;font-weight:600;color:#fff;
+      background:linear-gradient(135deg,#e2baff,#ffb6d9);
+      box-shadow:0 0 10px rgba(226,186,255,0.6)}
+    #reset-btn:hover{transform:scale(1.05)}
+    .card{background:rgba(255,255,255,0.9);border-radius:22px;padding:30px 40px;
+      box-shadow:0 6px 25px rgba(0,0,0,0.05);backdrop-filter:blur(10px);
+      max-width:700px;width:100%;margin-bottom:30px;z-index:3}
+    ul{display:flex;flex-wrap:wrap;justify-content:center;gap:15px;list-style:none;padding:0;margin:0}
+    li{background:#fff;border-radius:12px;padding:12px 20px;font-weight:500;color:#6a4c93;
+      box-shadow:0 2px 10px rgba(0,0,0,0.05);transition:transform .2s ease,box-shadow .2s ease}
+    li:hover{transform:translateY(-3px);box-shadow:0 4px 14px rgba(0,0,0,0.08)}
+    .hidden{display:none!important}
+    .no-results{width:100%;text-align:center;color:#b06ab3;font-weight:600;margin-top:10px;font-size:.95rem}
+    .highlight{background:linear-gradient(90deg,#ffe3f5,#e7c4ff);border-radius:5px;padding:0 3px}
   </style>
 </head>
 <body>
-  <div class="aura"></div>
-
   <main>
     <h1>Arochea’s Archives</h1>
     <p class="subtitle">A cozy corner of the Arochea world — where stories, characters, and memories are preserved with love.</p>
 
-    <div class="card">
+    <!-- 🪄 NEW Search UI -->
+    <div class="search-card">
+      <div class="search-row">
+        <select id="category-select">
+          <option value="all">All Categories</option>
+          <option value="games">Games</option>
+          <option value="packs">Packs</option>
+          <option value="items">Items</option>
+        </select>
+        <input type="text" id="search-input" placeholder="Search..." />
+        <button id="reset-btn" title="Clear search">Reset</button>
+      </div>
+    </div>
+
+    <div class="card" data-category="games">
       <h2>🎮 Games</h2>
       <ul id="game-list"></ul>
+      <p class="no-results hidden">No games found.</p>
     </div>
 
-    <div class="card">
+    <div class="card" data-category="packs">
       <h2>📦 Packs</h2>
       <ul id="pack-list"></ul>
+      <p class="no-results hidden">No packs found.</p>
     </div>
 
-    <div class="card">
+    <div class="card" data-category="items">
       <h2>🧸 Items</h2>
       <ul id="item-list"></ul>
+      <p class="no-results hidden">No items found.</p>
     </div>
   </main>
 
   <footer>© 2025 Arochea’s Archives · Powered by TaurusTech</footer>
 
-  <button id="music-toggle" title="Toggle background music">🎵</button>
+  <button id="music-toggle">🎵</button>
   <audio id="bg-music" loop preload="auto" src="https://github.com/kcasko/arocheaplays/raw/refs/heads/main/assets/audio/whispering-stars.mp3"></audio>
 
   <script>
-    // ✨ Sparkles and Hearts
-    const sparkleColors = ['#ffb3ba', '#ffdfba', '#fff6b3', '#baffc9', '#bae1ff', '#e2baff', '#f8d1ff'];
-    for (let i = 0; i < 35; i++) {
-      const s = document.createElement('div');
-      s.classList.add('sparkle');
-      const size = 6 + Math.random() * 10;
-      s.style.width = `${size}px`;
-      s.style.height = `${size}px`;
-      s.style.left = Math.random() * 100 + 'vw';
-      const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
-      s.style.background = color;
-      s.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
-      s.style.animationDuration = 10 + Math.random() * 10 + 's';
-      s.style.animationDelay = Math.random() * 8 + 's';
-      document.body.appendChild(s);
-    }
-
-    const heartColors = ['#ff9acb', '#ffb6d9', '#ffa3c1', '#ff8ec2', '#ffd0dc'];
-    for (let i = 0; i < 12; i++) {
-      const h = document.createElement('div');
-      h.classList.add('heart');
-      h.textContent = '♥';
-      h.style.left = Math.random() * 100 + 'vw';
-      h.style.fontSize = 18 + Math.random() * 20 + 'px';
-      const color = heartColors[Math.floor(Math.random() * heartColors.length)];
-      h.style.color = color;
-      h.style.animationDuration = 10 + Math.random() * 12 + 's';
-      h.style.animationDelay = Math.random() * 6 + 's';
-      document.body.appendChild(h);
-    }
-
-    // 🔮 Fetch Helper
-    async function loadSection(endpoint, listId, fieldName) {
-      try {
-        const res = await fetch(endpoint);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        const records = data.records || data;
-        const list = document.getElementById(listId);
-        if (!records?.length) {
-          list.innerHTML = "<li>No data found</li>";
-          return;
-        }
-        records.forEach(r => {
-          const li = document.createElement('li');
-          li.textContent = r.fields[fieldName] || "(Unnamed)";
+    // 🔮 Fetch Helper (unchanged core)
+    async function loadSection(endpoint, listId, fieldName){
+      try{
+        const res=await fetch(endpoint);
+        if(!res.ok)throw new Error(`HTTP ${res.status}`);
+        const data=await res.json();
+        const records=data.records||data;
+        const list=document.getElementById(listId);
+        if(!records?.length){list.innerHTML="<li>No data found</li>";return;}
+        records.forEach(r=>{
+          const li=document.createElement('li');
+          li.textContent=r.fields[fieldName]||"(Unnamed)";
           list.appendChild(li);
         });
-      } catch (err) {
-        console.error(`Failed to load ${listId}:`, err);
-        document.getElementById(listId).innerHTML = "<li style='color:#e66;'>Error loading data</li>";
+      }catch(err){
+        console.error(`Failed to load ${listId}:`,err);
+        document.getElementById(listId).innerHTML="<li style='color:#e66;'>Error loading data</li>";
       }
     }
 
-    // 🧙 Load all sections
-    loadSection('/api/games', 'game-list', 'Games');
-    loadSection('/api/packs', 'pack-list', 'Packs');
-    loadSection('/api/items', 'item-list', 'Items');
+    // Load everything
+    loadSection('/api/games','game-list','Games');
+    loadSection('/api/packs','pack-list','Packs');
+    loadSection('/api/items','item-list','Items');
 
-    // 🎵 Music Toggle
-    const toggle = document.getElementById('music-toggle');
-    const music = document.getElementById('bg-music');
-    let playing = false;
-    toggle.addEventListener('click', async () => {
-      try {
-        if (!playing) {
-          music.volume = 0;
-          await music.play();
-          toggle.classList.add('active');
-          const fadeIn = setInterval(() => {
-            if (music.volume < 0.5) music.volume += 0.05;
-            else clearInterval(fadeIn);
-          }, 200);
-          playing = true;
-        } else {
-          const fadeOut = setInterval(() => {
-            if (music.volume > 0) music.volume -= 0.05;
-            else {
-              clearInterval(fadeOut);
-              music.pause();
-            }
-          }, 200);
-          toggle.classList.remove('active');
-          playing = false;
+    // 🪄 NEW: Enhanced Search Logic
+    const input=document.getElementById('search-input');
+    const category=document.getElementById('category-select');
+    const reset=document.getElementById('reset-btn');
+    const lists={
+      games:document.querySelector('#game-list'),
+      packs:document.querySelector('#pack-list'),
+      items:document.querySelector('#item-list')
+    };
+
+    function highlightMatch(text,query){
+      if(!query)return text;
+      const regex=new RegExp(`(${query})`,'gi');
+      return text.replace(regex,'<span class="highlight">$1</span>');
+    }
+
+    function performSearch(){
+      const term=input.value.trim().toLowerCase();
+      const cat=category.value;
+      Object.entries(lists).forEach(([key,list])=>{
+        let visibleCount=0;
+        list.querySelectorAll('li').forEach(li=>{
+          const text=li.textContent.toLowerCase();
+          const match=text.includes(term);
+          const inCategory=(cat==='all'||cat===key);
+          li.classList.toggle('hidden',term && (!match||!inCategory));
+          if(!li.classList.contains('hidden'))visibleCount++;
+          li.innerHTML=highlightMatch(li.textContent,term); // highlight match
+        });
+        const noMsg=list.parentElement.querySelector('.no-results');
+        noMsg.classList.toggle('hidden',visibleCount>0);
+      });
+    }
+
+    // 🧠 Debounce
+    let timer;
+    input.addEventListener('input',()=>{
+      clearTimeout(timer);
+      timer=setTimeout(performSearch,200);
+    });
+    category.addEventListener('change',performSearch);
+
+    // 🧹 Reset + Keyboard Shortcuts
+    reset.addEventListener('click',()=>{
+      input.value='';category.value='all';
+      document.querySelectorAll('.highlight').forEach(el=>el.outerHTML=el.innerText);
+      performSearch();
+    });
+    input.addEventListener('keydown',e=>{
+      if(e.key==='Escape'){input.value='';performSearch();}
+      if(e.key==='Enter')performSearch();
+    });
+
+    // 🎵 Music toggle untouched
+    const toggle=document.getElementById('music-toggle');
+    const music=document.getElementById('bg-music');
+    let playing=false;
+    toggle.addEventListener('click',async()=>{
+      try{
+        if(!playing){music.volume=0;await music.play();toggle.classList.add('active');
+          const fadeIn=setInterval(()=>{if(music.volume<0.5)music.volume+=0.05;else clearInterval(fadeIn);},200);
+          playing=true;
+        }else{
+          const fadeOut=setInterval(()=>{if(music.volume>0)music.volume-=0.05;else{clearInterval(fadeOut);music.pause();}},200);
+          toggle.classList.remove('active');playing=false;
         }
-      } catch (e) {
-        console.warn('Autoplay blocked:', e);
-      }
+      }catch(e){console.warn('Autoplay blocked:',e);}
     });
   </script>
 </body>
