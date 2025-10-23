@@ -41,7 +41,6 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* ✨ Floating sparkles */
     .sparkle {
       position: absolute;
       border-radius: 50%;
@@ -56,7 +55,6 @@
       100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
     }
 
-    /* 💖 Hearts */
     .heart {
       position: absolute;
       font-size: 24px;
@@ -74,7 +72,6 @@
       100% { transform: translateY(-10vh) translateX(-20px) scale(1.2); opacity: 0; }
     }
 
-    /* 🌈 Glow aura */
     .aura {
       position: absolute;
       width: 100%;
@@ -90,7 +87,6 @@
       to { opacity: 0.6; transform: scale(1.05); }
     }
 
-    /* 🫧 Bubbly title */
     h1 {
       font-size: 3.2rem;
       font-weight: 900;
@@ -137,7 +133,6 @@
       to { opacity: 1; }
     }
 
-    /* 🌷 Subtitle with soft black border */
     p.subtitle {
       font-size: 1.1rem;
       font-weight: 600;
@@ -160,7 +155,6 @@
       50% { filter: brightness(1.25); }
     }
 
-    /* 📜 Card */
     .card {
       background: rgba(255, 255, 255, 0.9);
       border-radius: 22px;
@@ -213,7 +207,6 @@
       z-index: 3;
     }
 
-    /* 🎵 Music toggle */
     #music-toggle {
       position: fixed;
       bottom: 20px;
@@ -236,11 +229,6 @@
       box-shadow: 0 0 15px rgba(255, 170, 220, 0.9);
     }
 
-    #music-toggle:focus-visible {
-      outline: 2px solid #fff;
-      outline-offset: 3px;
-    }
-
     #music-toggle.active {
       box-shadow: 0 0 20px rgba(255, 200, 230, 1);
       background: linear-gradient(135deg, #ff91c9, #d1b6ff);
@@ -248,12 +236,25 @@
   </style>
 </head>
 <body>
-  <!-- Arochea’s Archives v1.0 — Final aesthetic iteration (Oct 2025) -->
-
   <div class="aura"></div>
 
-  <!-- 🌈 sparkles + hearts -->
+  <main>
+    <h1>Arochea’s Archives</h1>
+    <p class="subtitle">A cozy corner of the Arochea world — where stories, characters, and memories are preserved with love.</p>
+
+    <div class="card">
+      <h2>🎮 Games</h2>
+      <ul id="game-list"></ul>
+    </div>
+  </main>
+
+  <footer>© 2025 Arochea’s Archives · Powered by TaurusTech</footer>
+
+  <button id="music-toggle" title="Toggle background music">🎵</button>
+  <audio id="bg-music" loop preload="auto" src="https://github.com/kcasko/arocheaplays/raw/refs/heads/main/assets/audio/whispering-stars.mp3"></audio>
+
   <script>
+    // ✨ Sparkles & hearts
     const sparkleColors = ['#ffb3ba', '#ffdfba', '#fff6b3', '#baffc9', '#bae1ff', '#e2baff', '#f8d1ff'];
     for (let i = 0; i < 35; i++) {
       const s = document.createElement('div');
@@ -283,54 +284,29 @@
       h.style.animationDelay = Math.random() * 6 + 's';
       document.body.appendChild(h);
     }
-  </script>
 
-  <main>
-    <h1>Arochea’s Archives</h1>
-    <p class="subtitle">A cozy corner of the Arochea world — where stories, characters, and memories are preserved with love.</p>
-    <div class="card">
-      <ul id="character-list"></ul>
-    </div>
-  </main>
-
-  <footer>
-    © 2025 Arochea’s Archives · Powered by TaurusTech
-  </footer>
-
-  <!-- 🎵 Music player toggle -->
-  <button id="music-toggle" title="Toggle background music">🎵</button>
-  <audio id="bg-music" loop preload="auto" src="https://github.com/kcasko/arocheaplays/raw/refs/heads/main/assets/audio/whispering-stars.mp3"></audio>
-
-  <script>
-    // 🧙 Fetch items
-    fetch('/api/games') // Or '/items', '/packs', etc.
+    // 🧙 Fetch Games
+    fetch('/api/games')
       .then(res => {
-        // First, check if the network response is ok
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         return res.json();
       })
-      .then(records => { // 'records' is the array from Airtable
-        const list = document.getElementById('character-list');
-
-        // Check if the list is empty
-        if (records.length === 0) {
-          list.innerHTML = "<li>No characters found!</li>";
+      .then(data => {
+        const records = data.records || data;
+        const list = document.getElementById('game-list');
+        if (!records || records.length === 0) {
+          list.innerHTML = "<li>No games found!</li>";
           return;
         }
-
-        // Loop through the array of record OBJECTS
-        records.forEach(record => { 
+        records.forEach(record => {
           const li = document.createElement('li');
-          // Get the 'Name' from the 'fields' object
-          li.textContent = record.fields.Name; 
+          li.textContent = record.fields.Games || "(Unnamed Game)";
           list.appendChild(li);
         });
       })
-      .catch((err) => {
-        console.error('Failed to load characters:', err);
-        const list = document.getElementById('character-list');
+      .catch(err => {
+        console.error('Failed to load games:', err);
+        const list = document.getElementById('game-list');
         list.innerHTML = "<li style='color:#e66;'>Error loading data</li>";
       });
 
@@ -338,7 +314,6 @@
     const toggle = document.getElementById('music-toggle');
     const music = document.getElementById('bg-music');
     let playing = false;
-
     toggle.addEventListener('click', async () => {
       try {
         if (!playing) {
