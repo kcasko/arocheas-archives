@@ -32,7 +32,8 @@
       padding: 60px 20px;
       text-align: center;
       position: relative;
-      overflow: hidden;
+      overflow-x: hidden;   /* ✅ prevents horizontal scroll */
+      overflow-y: auto;     /* ✅ allows vertical scroll */
     }
 
     @keyframes bgShift {
@@ -118,12 +119,14 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       -webkit-text-stroke: 0.6px rgba(0, 0, 0, 0.6);
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 10px rgba(255, 255, 255, 0.6);
+      text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.2),
+        0 0 10px rgba(255, 255, 255, 0.6);
       margin-bottom: 40px;
       max-width: 600px;
       z-index: 3;
-      opacity: 0;
-      animation: fadeIn 2s ease forwards, shimmer 5s ease-in-out infinite alternate;
+      opacity: 1; /* ✅ always visible */
+      animation: shimmer 5s ease-in-out infinite alternate; /* ✅ keep gentle glow only */
     }
 
     .card {
