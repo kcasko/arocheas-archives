@@ -11,7 +11,7 @@ export async function onRequestGet(context) {
   const BASE_ID = env.AIRTABLE_BASE_ID;
   
   // This MUST match your Airtable table name (it's case-sensitive)
-  const TABLE_NAME = "Items"; 
+  const TABLE_NAME = "3. Items"; 
 
   const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}`;
 
