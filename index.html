@@ -105,32 +105,10 @@
       margin-bottom: 10px;
     }
 
-    @keyframes floatTitle {
-      from { transform: translateY(0); }
-      to { transform: translateY(-5px); }
-    }
-
+    @keyframes floatTitle { from { transform: translateY(0); } to { transform: translateY(-5px); } }
     @keyframes bubblePulse {
-      0%, 100% {
-        transform: scale(1);
-        text-shadow:
-          0 2px 0 #f9b8e3,
-          0 4px 0 #f3a8d9,
-          0 6px 10px rgba(255, 150, 255, 0.6),
-          0 0 18px rgba(255, 210, 255, 0.7);
-      }
-      50% {
-        transform: scale(1.06);
-        text-shadow:
-          0 3px 0 #f9b8e3,
-          0 6px 0 #f3a8d9,
-          0 8px 14px rgba(255, 170, 255, 0.8),
-          0 0 25px rgba(255, 220, 255, 0.9);
-      }
-    }
-
-    @keyframes fadeIn {
-      to { opacity: 1; }
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
     }
 
     p.subtitle {
@@ -140,19 +118,12 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       -webkit-text-stroke: 0.6px rgba(0, 0, 0, 0.6);
-      text-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.2),
-        0 0 10px rgba(255, 255, 255, 0.6);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 10px rgba(255, 255, 255, 0.6);
       margin-bottom: 40px;
       max-width: 600px;
       z-index: 3;
       opacity: 0;
       animation: fadeIn 2s ease forwards, shimmer 5s ease-in-out infinite alternate;
-    }
-
-    @keyframes shimmer {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.25); }
     }
 
     .card {
@@ -166,11 +137,6 @@
       margin-bottom: 30px;
       z-index: 3;
       animation: fadeInUp 1.5s ease;
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     ul {
@@ -198,41 +164,18 @@
       box-shadow: 0 4px 14px rgba(0,0,0,0.08);
     }
 
-    footer {
-      margin-top: auto;
-      font-size: 0.85rem;
-      color: #6a4c93;
-      padding: 40px 0 10px;
-      opacity: 0.8;
-      z-index: 3;
-    }
+    footer { margin-top: auto; font-size: 0.85rem; color: #6a4c93; padding: 40px 0 10px; opacity: 0.8; z-index: 3; }
 
     #music-toggle {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #ffb6d9, #e2baff);
+      position: fixed; bottom: 20px; right: 20px; width: 55px; height: 55px;
+      border-radius: 50%; background: linear-gradient(135deg, #ffb6d9, #e2baff);
       box-shadow: 0 0 10px rgba(255, 170, 220, 0.7);
-      border: none;
-      color: #fff;
-      font-size: 22px;
-      cursor: pointer;
-      z-index: 5;
-      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      border: none; color: #fff; font-size: 22px; cursor: pointer;
+      z-index: 5; transition: transform 0.2s ease, box-shadow 0.3s ease;
     }
 
-    #music-toggle:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 15px rgba(255, 170, 220, 0.9);
-    }
-
-    #music-toggle.active {
-      box-shadow: 0 0 20px rgba(255, 200, 230, 1);
-      background: linear-gradient(135deg, #ff91c9, #d1b6ff);
-    }
+    #music-toggle:hover { transform: scale(1.1); box-shadow: 0 0 15px rgba(255, 170, 220, 0.9); }
+    #music-toggle.active { box-shadow: 0 0 20px rgba(255, 200, 230, 1); background: linear-gradient(135deg, #ff91c9, #d1b6ff); }
   </style>
 </head>
 <body>
@@ -246,6 +189,16 @@
       <h2>🎮 Games</h2>
       <ul id="game-list"></ul>
     </div>
+
+    <div class="card">
+      <h2>📦 Packs</h2>
+      <ul id="pack-list"></ul>
+    </div>
+
+    <div class="card">
+      <h2>🧸 Items</h2>
+      <ul id="item-list"></ul>
+    </div>
   </main>
 
   <footer>© 2025 Arochea’s Archives · Powered by TaurusTech</footer>
@@ -254,7 +207,7 @@
   <audio id="bg-music" loop preload="auto" src="https://github.com/kcasko/arocheaplays/raw/refs/heads/main/assets/audio/whispering-stars.mp3"></audio>
 
   <script>
-    // ✨ Sparkles & hearts
+    // ✨ Sparkles and Hearts
     const sparkleColors = ['#ffb3ba', '#ffdfba', '#fff6b3', '#baffc9', '#bae1ff', '#e2baff', '#f8d1ff'];
     for (let i = 0; i < 35; i++) {
       const s = document.createElement('div');
@@ -285,32 +238,35 @@
       document.body.appendChild(h);
     }
 
-    // 🧙 Fetch Games
-    fetch('/api/games')
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
+    // 🔮 Fetch Helper
+    async function loadSection(endpoint, listId, fieldName) {
+      try {
+        const res = await fetch(endpoint);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
         const records = data.records || data;
-        const list = document.getElementById('game-list');
-        if (!records || records.length === 0) {
-          list.innerHTML = "<li>No games found!</li>";
+        const list = document.getElementById(listId);
+        if (!records?.length) {
+          list.innerHTML = "<li>No data found</li>";
           return;
         }
-        records.forEach(record => {
+        records.forEach(r => {
           const li = document.createElement('li');
-          li.textContent = record.fields.Games || "(Unnamed Game)";
+          li.textContent = r.fields[fieldName] || "(Unnamed)";
           list.appendChild(li);
         });
-      })
-      .catch(err => {
-        console.error('Failed to load games:', err);
-        const list = document.getElementById('game-list');
-        list.innerHTML = "<li style='color:#e66;'>Error loading data</li>";
-      });
+      } catch (err) {
+        console.error(`Failed to load ${listId}:`, err);
+        document.getElementById(listId).innerHTML = "<li style='color:#e66;'>Error loading data</li>";
+      }
+    }
 
-    // 🎵 Music toggle
+    // 🧙 Load all sections
+    loadSection('/api/games', 'game-list', 'Games');
+    loadSection('/api/packs', 'pack-list', 'Packs');
+    loadSection('/api/items', 'item-list', 'Items');
+
+    // 🎵 Music Toggle
     const toggle = document.getElementById('music-toggle');
     const music = document.getElementById('bg-music');
     let playing = false;
@@ -320,13 +276,13 @@
           music.volume = 0;
           await music.play();
           toggle.classList.add('active');
-          let fade = setInterval(() => {
+          const fadeIn = setInterval(() => {
             if (music.volume < 0.5) music.volume += 0.05;
-            else clearInterval(fade);
+            else clearInterval(fadeIn);
           }, 200);
           playing = true;
         } else {
-          let fadeOut = setInterval(() => {
+          const fadeOut = setInterval(() => {
             if (music.volume > 0) music.volume -= 0.05;
             else {
               clearInterval(fadeOut);
@@ -337,7 +293,7 @@
           playing = false;
         }
       } catch (e) {
-        console.warn('Autoplay blocked, waiting for user interaction:', e);
+        console.warn('Autoplay blocked:', e);
       }
     });
   </script>
