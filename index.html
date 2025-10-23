@@ -106,98 +106,191 @@
   <audio id="bg-music" loop preload="auto" src="https://github.com/kcasko/arocheaplays/raw/refs/heads/main/assets/audio/whispering-stars.mp3"></audio>
 
   <script>
-    // 🔮 Fetch Helper (unchanged core)
-    async function loadSection(endpoint, listId, fieldName){
-      try{
-        const res=await fetch(endpoint);
-        if(!res.ok)throw new Error(`HTTP ${res.status}`);
-        const data=await res.json();
-        const records=data.records||data;
-        const list=document.getElementById(listId);
-        if(!records?.length){list.innerHTML="<li>No data found</li>";return;}
-        records.forEach(r=>{
-          const li=document.createElement('li');
-          li.textContent=r.fields[fieldName]||"(Unnamed)";
-          list.appendChild(li);
-        });
-      }catch(err){
-        console.error(`Failed to load ${listId}:`,err);
-        document.getElementById(listId).innerHTML="<li style='color:#e66;'>Error loading data</li>";
-      }
-    }
-
-    // Load everything
-    loadSection('/api/games','game-list','Games');
-    loadSection('/api/packs','pack-list','Packs');
-    loadSection('/api/items','item-list','Items');
-
-    // 🪄 NEW: Enhanced Search Logic
-    const input=document.getElementById('search-input');
-    const category=document.getElementById('category-select');
-    const reset=document.getElementById('reset-btn');
-    const lists={
-      games:document.querySelector('#game-list'),
-      packs:document.querySelector('#pack-list'),
-      items:document.querySelector('#item-list')
+    // --- Centralized Data Store and Configuration ---
+    const archiveData = {
+      games: [],
+      packs: [],
+      items: []
+    };
+    
+    // Config mirroring the data contract for easy lookup
+    const config = {
+      games: { endpoint: '/api/games', listId: 'game-list', fieldName: 'Games' },
+      packs: { endpoint: '/api/packs', listId: 'pack-list', fieldName: 'Packs' },
+      items: { endpoint: '/api/items', listId: 'item-list', fieldName: 'Items' }
     };
 
-    function highlightMatch(text,query){
-      if(!query)return text;
-      const regex=new RegExp(`(${query})`,'gi');
+    // --- DOM Elements ---
+    const input = document.getElementById('search-input');
+    const category = document.getElementById('category-select');
+    const reset = document.getElementById('reset-btn');
+    const lists = {
+      games: document.querySelector('#game-list'),
+      packs: document.querySelector('#pack-list'),
+      items: document.querySelector('#item-list')
+    };
+
+    // --- Core Search & Rendering Functions ---
+
+    /**
+     * Highlights matching substrings.
+     */
+    function highlightMatch(text, query){
+      if(!query) return text;
+      // Escape special characters in the query for safe use in RegExp
+      const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      const regex = new RegExp(`(${escapedQuery})`,'gi');
       return text.replace(regex,'<span class="highlight">$1</span>');
     }
 
-    function performSearch(){
-      const term=input.value.trim().toLowerCase();
-      const cat=category.value;
-      Object.entries(lists).forEach(([key,list])=>{
-        let visibleCount=0;
-        list.querySelectorAll('li').forEach(li=>{
-          const text=li.textContent.toLowerCase();
-          const match=text.includes(term);
-          const inCategory=(cat==='all'||cat===key);
-          li.classList.toggle('hidden',term && (!match||!inCategory));
-          if(!li.classList.contains('hidden'))visibleCount++;
-          li.innerHTML=highlightMatch(li.textContent,term); // highlight match
+    /**
+     * Renders the filtered data for a single section.
+     * @param {string} key 'games', 'packs', or 'items'
+     * @param {string[]} filteredItems An array of item names to render.
+     * @param {string} term The search term for highlighting.
+     */
+    function renderList(key, filteredItems, term) {
+      const list = lists[key];
+      const noMsg = list.parentElement.querySelector('.no-results');
+      
+      list.innerHTML = '';
+      
+      if (filteredItems.length === 0) {
+        // Show 'No results' only if a search term is present
+        noMsg.classList.toggle('hidden', !term);
+      } else {
+        // Hide 'No results' and render items
+        noMsg.classList.add('hidden');
+        filteredItems.forEach(itemText => {
+          const li = document.createElement('li');
+          // No need for .hidden here, as we only render visible items.
+          li.innerHTML = highlightMatch(itemText, term);
+          list.appendChild(li);
         });
-        const noMsg=list.parentElement.querySelector('.no-results');
-        noMsg.classList.toggle('hidden',visibleCount>0);
+      }
+    }
+
+    /**
+     * Performs the centralized search and triggers list rendering.
+     * This is the main function that drives the UI.
+     */
+    function performSearch(){
+      const term = input.value.trim().toLowerCase();
+      const cat = category.value; // 'games', 'packs', 'items', or 'all'
+      
+      // Iterate over each section (games, packs, items)
+      Object.entries(config).forEach(([key, conf]) => {
+        // 1. Filter Check: Is this section included in the category filter?
+        const isInCategory = (cat === 'all' || cat === key);
+
+        let filteredItems = [];
+
+        if (term && isInCategory) {
+          // 2. Data Filtering: Filter the in-memory data store
+          filteredItems = archiveData[key]
+            .filter(item => item.toLowerCase().includes(term));
+
+        } else if (!term && !isInCategory) {
+          // 3. Special Case: Empty term, but category is filtered to another section
+          // Lists should be empty/hidden for this section.
+          // filteredItems remains []
+
+        } else if (!term && isInCategory) {
+           // 4. Special Case: Empty term, category is 'all' or this section
+           // The request is to START HIDDEN, so we keep the list empty.
+           // filteredItems remains []
+           // If the requirement was to show all on empty search, we'd use: filteredItems = archiveData[key];
+        }
+
+        // 5. Render: Update the DOM for this section
+        renderList(key, filteredItems, term);
       });
     }
 
-    // 🧠 Debounce
-    let timer;
-    input.addEventListener('input',()=>{
-      clearTimeout(timer);
-      timer=setTimeout(performSearch,200);
-    });
-    category.addEventListener('change',performSearch);
+    // --- Data Loading and Initialization ---
 
-    // 🧹 Reset + Keyboard Shortcuts
-    reset.addEventListener('click',()=>{
-      input.value='';category.value='all';
-      document.querySelectorAll('.highlight').forEach(el=>el.outerHTML=el.innerText);
-      performSearch();
-    });
-    input.addEventListener('keydown',e=>{
-      if(e.key==='Escape'){input.value='';performSearch();}
-      if(e.key==='Enter')performSearch();
-    });
+    /**
+     * Fetches data, populates the in-memory store, and calls initial rendering.
+     * (Contract: loadSection)
+     */
+    async function loadSection(endpoint, listId, fieldName){
+      const key = listId.replace('-list', ''); // e.g., 'game-list' -> 'game'
+      const list = document.getElementById(listId);
+      const noMsg = list.parentElement.querySelector('.no-results');
 
-    // 🎵 Music toggle untouched
-    const toggle=document.getElementById('music-toggle');
-    const music=document.getElementById('bg-music');
-    let playing=false;
-    toggle.addEventListener('click',async()=>{
       try{
-        if(!playing){music.volume=0;await music.play();toggle.classList.add('active');
-          const fadeIn=setInterval(()=>{if(music.volume<0.5)music.volume+=0.05;else clearInterval(fadeIn);},200);
-          playing=true;
-        }else{
-          const fadeOut=setInterval(()=>{if(music.volume>0)music.volume-=0.05;else{clearInterval(fadeOut);music.pause();}},200);
-          toggle.classList.remove('active');playing=false;
+        const res = await fetch(endpoint);
+        if(!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const records = data.records || data;
+
+        if(!records?.length){
+          list.innerHTML = "<li class='error-msg'>No data found</li>";
+          noMsg.classList.remove('hidden'); 
+          return;
         }
-      }catch(e){console.warn('Autoplay blocked:',e);}
+        
+        // Populate In-Memory Data Store (CRITICAL CHANGE)
+        archiveData[key] = records.map(r => r.fields[fieldName] || "(Unnamed)");
+        
+        // Initial state is empty lists, so no initial render is needed.
+        list.innerHTML = "";
+        noMsg.classList.add('hidden');
+
+      }catch(err){
+        console.error(`Failed to load ${listId}:`, err);
+        list.innerHTML = "<li style='color:#e66;'>Error loading data</li>";
+        noMsg.classList.remove('hidden'); // Show card to make the error visible
+      }
+    }
+
+    // --- Event Wiring ---
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Load all data into the in-memory store
+      loadSection(config.games.endpoint, config.games.listId, config.games.fieldName);
+      loadSection(config.packs.endpoint, config.packs.listId, config.packs.fieldName);
+      loadSection(config.items.endpoint, config.items.listId, config.items.fieldName);
+
+      // Debounce utility (200ms)
+      let timer;
+      input.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(performSearch, 200);
+      });
+
+      // Category change is not debounced
+      category.addEventListener('change', performSearch);
+
+      // Reset button logic
+      reset.addEventListener('click', () => {
+        input.value = '';
+        category.value = 'all';
+        // Clearing the term and searching will re-hide all lists, as requested.
+        performSearch();
+      });
+
+      // Keyboard shortcuts
+      input.addEventListener('keydown', e => {
+        if(e.key === 'Escape'){ input.value = ''; performSearch(); e.preventDefault();}
+        if(e.key === 'Enter') { performSearch(); e.preventDefault();}
+      });
+
+      // --- Music Toggle (Unchanged) ---
+      const toggle=document.getElementById('music-toggle');
+      const music=document.getElementById('bg-music');
+      let playing=false;
+      toggle.addEventListener('click',async()=>{
+        try{
+          if(!playing){music.volume=0;await music.play();toggle.classList.add('active');
+            const fadeIn=setInterval(()=>{if(music.volume<0.5)music.volume+=0.05;else clearInterval(fadeIn);},200);
+            playing=true;
+          }else{
+            const fadeOut=setInterval(()=>{if(music.volume>0)music.volume-=0.05;else{clearInterval(fadeOut);music.pause();}},200);
+            toggle.classList.remove('active');playing=false;
+          }
+        }catch(e){console.warn('Autoplay blocked:',e);}
+      });
     });
   </script>
 </body>
