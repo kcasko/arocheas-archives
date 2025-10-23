@@ -1,334 +1,370 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Arochea’s Archives</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arochea’s Archives</title>
 
-    <meta name="description" content="Arochea’s Archives — a cozy corner of the Arochea world where stories, characters, and memories are preserved with love.">
-  <meta property="og:title" content="Arochea’s Archives">
-  <meta property="og:description" content="A cozy corner of the Arochea world where stories, characters, and memories are preserved with love.">
-  <meta property="og:image" content="https://www.arocheaplays.com/assets/og-image.jpg">
-  <meta name="theme-color" content="#e2baff">
-  <link rel="icon" href="/assets/favicon.png" type="image/png">
+  <!-- 🌸 Meta & SEO -->
+  <meta name="description" content="Arochea’s Archives — a cozy corner of the Arochea world where stories, characters, and memories are preserved with love.">
+  <meta property="og:title" content="Arochea’s Archives">
+  <meta property="og:description" content="A cozy corner of the Arochea world where stories, characters, and memories are preserved with love.">
+  <meta property="og:image" content="https://www.arocheaplays.com/assets/og-image.jpg">
+  <meta name="theme-color" content="#e2baff">
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 
-  <style>
-    /* ... all your beautiful CSS ... */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Quicksand', 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #ffd9ec 0%, #e2baff 50%, #cde4ff 100%);
-      background-size: 200% 200%;
-      animation: bgShift 20s ease infinite;
-      color: #444;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 60px 20px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    @keyframes bgShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .sparkle {
-      position: absolute;
-      border-radius: 50%;
-      animation: floatUp 14s linear infinite;
-      pointer-events: none;
-      opacity: 0.9;
-      filter: blur(0.4px);
-    }
-    @keyframes floatUp {
-      0% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 0.8; }
-      100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
-    }
-    .heart {
-      position: absolute;
-      font-size: 24px;
-      color: #ff9acb;
-      opacity: 0.7;
-      animation: floatHeart 12s ease-in infinite;
-      pointer-events: none;
-      text-shadow: 0 0 12px rgba(255, 165, 200, 0.7);
-      filter: drop-shadow(0 0 6px rgba(255, 150, 200, 0.5));
-    }
-    @keyframes floatHeart {
-      0% { transform: translateY(100vh) translateX(0) scale(0.8); opacity: 0.7; }
-      50% { transform: translateY(50vh) translateX(20px) scale(1); opacity: 0.9; }
-      100% { transform: translateY(-10vh) translateX(-20px) scale(1.2); opacity: 0; }
-    }
-    .aura {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.25) 0%, transparent 70%);
-      animation: glowPulse 8s ease-in-out infinite alternate;
-      pointer-events: none;
-      z-index: 1;
-    }
-    @keyframes glowPulse {
-      from { opacity: 0.3; transform: scale(1); }
-      to { opacity: 0.6; transform: scale(1.05); }
-    }
-    h1 {
-      font-size: 3.2rem;
-      font-weight: 900;
-      letter-spacing: 1px;
-      background: linear-gradient(90deg, #fff4fc, #ffe2fb, #f5d6ff, #e2baff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4);
-      text-shadow:
-        0 2px 0 #f9b8e3,
-        0 4px 0 #f3a8d9,
-        0 4px 6px rgba(0, 0, 0, 0.25),
-        0 0 12px rgba(255, 182, 255, 0.7);
-      animation: fadeIn 1.5s ease forwards, floatTitle 6s ease-in-out infinite alternate, bubblePulse 3s ease-in-out infinite;
-      z-index: 3;
-      margin-bottom: 10px;
-    }
-    @keyframes floatTitle {
-      from { transform: translateY(0); }
-      to { transform: translateY(-5px); }
-    }
-    @keyframes bubblePulse {
-      0%, 100% {
-        transform: scale(1);
-        text-shadow:
-          0 2px 0 #f9b8e3,
-          0 4px 0 #f3a8d9,
-          0 6px 10px rgba(255, 150, 255, 0.6),
-          0 0 18px rgba(255, 210, 255, 0.7);
-      }
-      50% {
-        transform: scale(1.06);
-        text-shadow:
-          0 3px 0 #f9b8e3,
-          0 6px 0 #f3a8d9,
-          0 8px 14px rgba(255, 170, 255, 0.8),
-          0 0 25px rgba(255, 220, 255, 0.9);
-      }
-    }
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-    p.subtitle {
-      font-size: 1.1rem;
-      font-weight: 600;
-      background: linear-gradient(90deg, #a86aff, #ff84d6, #ffc2eb);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      -webkit-text-stroke: 0.6px rgba(0, 0, 0, 0.6);
-      text-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.2),
-        0 0 10px rgba(255, 255, 255, 0.6);
-      margin-bottom: 40px;
-      max-width: 600px;
-      z-index: 3;
-      opacity: 0;
-      animation: fadeIn 2s ease forwards, shimmer 5s ease-in-out infinite alternate;
-  G-Type }
-    @keyframes shimmer {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.25); }
-    }
-    .card {
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 22px;
-      padding: 30px 40px;
-      box-shadow: 0 6px 25px rgba(0,0,0,0.05);
-      backdrop-filter: blur(10px);
-      max-width: 700px;
-      width: 100%;
-      margin-bottom: 30px;
-      z-index: 3;
-      animation: fadeInUp 1.5s ease;
-    }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    ul {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      list-style: none;
-      padding: 0;
-  J-Type margin: 0;
-    }
-    li {
-      background: #fff;
-      border-radius: 12px;
-      padding: 12px 20px;
-      font-weight: 500;
-      color: #6a4c93;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    li:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-    }
-    footer {
-      margin-top: auto;
-      font-size: 0.85rem;
-      color: #6a4c93;
-      padding: 40px 0 10px;
-      opacity: 0.8;
-      z-index: 3;
-    }
-    #music-toggle {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 55px;
-      height: 55px;
-A-Type border-radius: 50%;
-      background: linear-gradient(135deg, #ffb6d9, #e2baff);
-      box-shadow: 0 0 10px rgba(255, 170, 220, 0.7);
-      border: none;
-      color: #fff;
-      font-size: 22px;
-      cursor: pointer;
-      z-index: 5;
-      transition: transform 0.2s ease, box-shadow 0.3s ease;
-    }
-    #music-toggle:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 15px rgba(255, 170, 220, 0.9);
-    }
-    #music-toggle:focus-visible {
-      outline: 2px solid #fff;
-      outline-offset: 3px;
-    }
-    #music-toggle.active {
-      box-shadow: 0 0 20px rgba(255, 200, 230, 1);
-      background: linear-gradient(135deg, #ff91c9, #d1b6ff);
-    }
-  </style>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Quicksand', 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ffd9ec 0%, #e2baff 50%, #cde4ff 100%);
+      background-size: 200% 200%;
+      animation: bgShift 20s ease infinite;
+      color: #444;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 60px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes bgShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ✨ Floating sparkles */
+    .sparkle {
+      position: absolute;
+      border-radius: 50%;
+      animation: floatUp 14s linear infinite;
+      pointer-events: none;
+      opacity: 0.9;
+      filter: blur(0.4px);
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 0.8; }
+      100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+    }
+
+    /* 💖 Hearts */
+    .heart {
+      position: absolute;
+      font-size: 24px;
+      color: #ff9acb;
+      opacity: 0.7;
+      animation: floatHeart 12s ease-in infinite;
+      pointer-events: none;
+      text-shadow: 0 0 12px rgba(255, 165, 200, 0.7);
+      filter: drop-shadow(0 0 6px rgba(255, 150, 200, 0.5));
+    }
+
+    @keyframes floatHeart {
+      0% { transform: translateY(100vh) translateX(0) scale(0.8); opacity: 0.7; }
+      50% { transform: translateY(50vh) translateX(20px) scale(1); opacity: 0.9; }
+      100% { transform: translateY(-10vh) translateX(-20px) scale(1.2); opacity: 0; }
+    }
+
+    /* 🌈 Glow aura */
+    .aura {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.25) 0%, transparent 70%);
+      animation: glowPulse 8s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes glowPulse {
+      from { opacity: 0.3; transform: scale(1); }
+      to { opacity: 0.6; transform: scale(1.05); }
+    }
+
+    /* 🫧 Bubbly title */
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #fff4fc, #ffe2fb, #f5d6ff, #e2baff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4);
+      text-shadow:
+        0 2px 0 #f9b8e3,
+        0 4px 0 #f3a8d9,
+        0 4px 6px rgba(0, 0, 0, 0.25),
+        0 0 12px rgba(255, 182, 255, 0.7);
+      animation: fadeIn 1.5s ease forwards, floatTitle 6s ease-in-out infinite alternate, bubblePulse 3s ease-in-out infinite;
+      z-index: 3;
+      margin-bottom: 10px;
+    }
+
+    @keyframes floatTitle {
+      from { transform: translateY(0); }
+      to { transform: translateY(-5px); }
+    }
+
+    @keyframes bubblePulse {
+      0%, 100% {
+        transform: scale(1);
+        text-shadow:
+          0 2px 0 #f9b8e3,
+          0 4px 0 #f3a8d9,
+          0 6px 10px rgba(255, 150, 255, 0.6),
+          0 0 18px rgba(255, 210, 255, 0.7);
+      }
+      50% {
+        transform: scale(1.06);
+        text-shadow:
+          0 3px 0 #f9b8e3,
+          0 6px 0 #f3a8d9,
+          0 8px 14px rgba(255, 170, 255, 0.8),
+          0 0 25px rgba(255, 220, 255, 0.9);
+      }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* 🌷 Subtitle with soft black border */
+    p.subtitle {
+      font-size: 1.1rem;
+      font-weight: 600;
+      background: linear-gradient(90deg, #a86aff, #ff84d6, #ffc2eb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-text-stroke: 0.6px rgba(0, 0, 0, 0.6);
+      text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.2),
+        0 0 10px rgba(255, 255, 255, 0.6);
+      margin-bottom: 40px;
+      max-width: 600px;
+      z-index: 3;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards, shimmer 5s ease-in-out infinite alternate;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.25); }
+    }
+
+    /* 📜 Card */
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 22px;
+      padding: 30px 40px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.05);
+      backdrop-filter: blur(10px);
+      max-width: 700px;
+      width: 100%;
+      margin-bottom: 30px;
+      z-index: 3;
+      animation: fadeInUp 1.5s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-weight: 500;
+      color: #6a4c93;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    li:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    footer {
+      margin-top: auto;
+      font-size: 0.85rem;
+      color: #6a4c93;
+      padding: 40px 0 10px;
+      opacity: 0.8;
+      z-index: 3;
+    }
+
+    /* 🎵 Music toggle */
+    #music-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffb6d9, #e2baff);
+      box-shadow: 0 0 10px rgba(255, 170, 220, 0.7);
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      z-index: 5;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    #music-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(255, 170, 220, 0.9);
+    }
+
+    #music-toggle:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 3px;
+    }
+
+    #music-toggle.active {
+      box-shadow: 0 0 20px rgba(255, 200, 230, 1);
+      background: linear-gradient(135deg, #ff91c9, #d1b6ff);
+    }
+  </style>
 </head>
 <body>
-    <div class="aura"></div>
+  <!-- Arochea’s Archives v1.0 — Final aesthetic iteration (Oct 2025) -->
 
-    <script>
-    const sparkleColors = ['#ffb3ba', '#ffdfba', '#fff6b3', '#baffc9', '#bae1ff', '#e2baff', '#f8d1ff'];
-    for (let i = 0; i < 35; i++) {
-      const s = document.createElement('div');
-      s.classList.add('sparkle');
-      const size = 6 + Math.random() * 10;
-      s.style.width = `${size}px`;
-      s.style.height = `${size}px`;
-      s.style.left = Math.random() * 100 + 'vw';
-      const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
-      s.style.background = color;
-      s.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
-      s.style.animationDuration = 10 + Math.random() * 10 + 's';
-      s.style.animationDelay = Math.random() * 8 + 's';
-      document.body.appendChild(s);
-    }
+  <div class="aura"></div>
 
-    const heartColors = ['#ff9acb', '#ffb6d9', '#ffa3c1', '#ff8ec2', '#ffd0dc'];
-    for (let i = 0; i < 12; i++) {
-      const h = document.createElement('div');
-      h.classList.add('heart');
-      h.textContent = '♥';
-      h.style.left = Math.random() * 100 + 'vw';
-      h.style.fontSize = 18 + Math.random() * 20 + 'px';
-      const color = heartColors[Math.floor(Math.random() * heartColors.length)];
-      h.style.color = color;
-      h.style.animationDuration = 10 + Math.random() * 12 + 's';
-      h.style.animationDelay = Math.random() * 6 + 's';
-      document.body.appendChild(h);
-    }
-  </script>
+  <!-- 🌈 sparkles + hearts -->
+  <script>
+    const sparkleColors = ['#ffb3ba', '#ffdfba', '#fff6b3', '#baffc9', '#bae1ff', '#e2baff', '#f8d1ff'];
+    for (let i = 0; i < 35; i++) {
+      const s = document.createElement('div');
+      s.classList.add('sparkle');
+      const size = 6 + Math.random() * 10;
+      s.style.width = `${size}px`;
+      s.style.height = `${size}px`;
+      s.style.left = Math.random() * 100 + 'vw';
+      const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+      s.style.background = color;
+      s.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+      s.style.animationDuration = 10 + Math.random() * 10 + 's';
+      s.style.animationDelay = Math.random() * 8 + 's';
+      document.body.appendChild(s);
+    }
 
-  <main>
-    <h1>Arochea’s Archives</h1>
-    <p class="subtitle">A cozy corner of the Arochea world — where stories, characters, and memories are preserved with love.</p>
-    <div class="card">
-            <ul id="item-list"></ul>
-    </div>
-  </main>
+    const heartColors = ['#ff9acb', '#ffb6d9', '#ffa3c1', '#ff8ec2', '#ffd0dc'];
+    for (let i = 0; i < 12; i++) {
+      const h = document.createElement('div');
+      h.classList.add('heart');
+      h.textContent = '♥';
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.fontSize = 18 + Math.random() * 20 + 'px';
+      const color = heartColors[Math.floor(Math.random() * heartColors.length)];
+      h.style.color = color;
+      h.style.animationDuration = 10 + Math.random() * 12 + 's';
+      h.style.animationDelay = Math.random() * 6 + 's';
+      document.body.appendChild(h);
+    }
+  </script>
 
-  <footer>
-    © 2025 Arochea’s Archives · Powered by TaurusTech
-  </footer>
+  <main>
+    <h1>Arochea’s Archives</h1>
+    <p class="subtitle">A cozy corner of the Arochea world — where stories, characters, and memories are preserved with love.</p>
+    <div class="card">
+      <ul id="character-list"></ul>
+    </div>
+  </main>
 
-    <button id="music-toggle" title="Toggle background music">🎵</button>
-  <audio id="bg-music" loop preload="auto" src="https://github.com/kcasko/arocheaplays/raw/refs/heads/main/assets/audio/whispering-stars.mp3"></audio>
+  <footer>
+    © 2025 Arochea’s Archives · Powered by TaurusTech
+  </footer>
 
-  <script>
-    // 🧙 Fetch items
-    fetch('/api/items') // This is correct
-      .then(res => {
-        if (!res.ok) {
-          // This will try to get the error message from your function
-          return res.json().then(errData => {
-            throw new Error(errData.error || `HTTP error! Status: ${res.status}`);
-          });
-        }
-        return res.json();
-      })
-      .then(records => { // 'records' is the array from Airtable
-              const list = document.getElementById('item-list');
+  <!-- 🎵 Music player toggle -->
+  <button id="music-toggle" title="Toggle background music">🎵</button>
+  <audio id="bg-music" loop preload="auto" src="https://github.com/kcasko/arocheaplays/raw/refs/heads/main/assets/audio/whispering-stars.mp3"></audio>
 
-        if (!records || records.length === 0) {
-                list.innerHTML = "<li>No items found!</li>";
-          return;
-        }
+  <script>
+    // 🧙 Fetch items
+    fetch('/api/items') // Or '/items', '/packs', etc.
+      .then(res => {
+        // First, check if the network response is ok
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(records => { // 'records' is the array from Airtable
+        const list = document.getElementById('character-list');
 
-        records.forEach(record => { 
-          const li = document.createElement('li');
-          // This is correct, it matches your screenshot
-          li.textContent = record.fields.Items; 
-          list.appendChild(li);
-        });
-      })
-      .catch((err) => {
-              console.error('Failed to load items:', err);
-              const list = document.getElementById('item-list');
-        list.innerHTML = `<li style='color:#e66;'>Error: ${err.message}</li>`;
-      });
+        // Check if the list is empty
+        if (records.length === 0) {
+          list.innerHTML = "<li>No characters found!</li>";
+          return;
+        }
 
-    // 🎵 Music toggle
-    const toggle = document.getElementById('music-toggle');
-    const music = document.getElementById('bg-music');
-    let playing = false;
+        // Loop through the array of record OBJECTS
+        records.forEach(record => { 
+          const li = document.createElement('li');
+          // Get the 'Name' from the 'fields' object
+          li.textContent = record.fields.Name; 
+          list.appendChild(li);
+        });
+      })
+      .catch((err) => {
+        console.error('Failed to load characters:', err);
+        const list = document.getElementById('character-list');
+        list.innerHTML = "<li style='color:#e66;'>Error loading data</li>";
+      });
 
-    toggle.addEventListener('click', async () => {
-      try {
-        if (!playing) {
-          music.volume = 0;
-          await music.play();
-          toggle.classList.add('active');
-          let fade = setInterval(() => {
-            if (music.volume < 0.5) music.volume += 0.05;
-            else clearInterval(fade);
-          }, 200);
-          playing = true;
-        } else {
-          let fadeOut = setInterval(() => {
-            if (music.volume > 0) music.volume -= 0.05;
-            else {
-              clearInterval(fadeOut);
-              music.pause();
-            }
-          }, 200);
-          toggle.classList.remove('active');
-  S-Type     playing = false;
-        }
-    S-Type } catch (e) {
-        console.warn('Autoplay blocked, waiting for user interaction:', e);
-section }
-    });
-  </script>
+    // 🎵 Music toggle
+    const toggle = document.getElementById('music-toggle');
+    const music = document.getElementById('bg-music');
+    let playing = false;
+
+    toggle.addEventListener('click', async () => {
+      try {
+        if (!playing) {
+          music.volume = 0;
+          await music.play();
+          toggle.classList.add('active');
+          let fade = setInterval(() => {
+            if (music.volume < 0.5) music.volume += 0.05;
+            else clearInterval(fade);
+          }, 200);
+          playing = true;
+        } else {
+          let fadeOut = setInterval(() => {
+            if (music.volume > 0) music.volume -= 0.05;
+            else {
+              clearInterval(fadeOut);
+              music.pause();
+            }
+          }, 200);
+          toggle.classList.remove('active');
+          playing = false;
+        }
+      } catch (e) {
+        console.warn('Autoplay blocked, waiting for user interaction:', e);
+      }
+    });
+  </script>
 </body>
 </html>
