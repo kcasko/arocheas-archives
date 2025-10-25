@@ -4,70 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Arochea’s Archives</title>
-
-  <meta name="description" content="Arochea’s Archives — a cozy corner of the Arochea world where stories, characters, and memories are preserved with love.">
-  <meta property="og:title" content="Arochea’s Archives">
-  <meta property="og:description" content="A cozy corner of the Arochea world where stories, characters, and memories are preserved with love.">
-  <meta property="og:image" content="https://www.arocheaplays.com/assets/og-image.jpg">
+  <meta name="description" content="A cozy corner of the Arochea world where stories, characters, and memories are preserved with love.">
   <meta name="theme-color" content="#e2baff">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
-
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:'Quicksand','Poppins',sans-serif;
-      background:linear-gradient(135deg,#ffd9ec 0%,#e2baff 50%,#cde4ff 100%);
-      background-size:200% 200%;animation:bgShift 20s ease infinite;
-      color:#444;display:flex;flex-direction:column;align-items:center;
-      min-height:100vh;padding:60px 20px;text-align:center;overflow-x:hidden;overflow-y:auto
-    }
-    @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-    h1{font-size:3.2rem;font-weight:900;letter-spacing:1px;
-      background:linear-gradient(90deg,#fff4fc,#ffe2fb,#f5d6ff,#e2baff);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-      text-shadow:0 2px 0 #f9b8e3,0 4px 0 #f3a8d9,0 4px 6px rgba(0,0,0,.25),0 0 12px rgba(255,182,255,.7);
-      animation:floatTitle 6s ease-in-out infinite alternate,bubblePulse 3s ease-in-out infinite;z-index:3;margin-bottom:10px}
-    @keyframes floatTitle{from{transform:translateY(0)}to{transform:translateY(-5px)}}
-    @keyframes bubblePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-    p.subtitle{font-size:1.15rem;font-weight:600;
-      background:linear-gradient(90deg,#a86aff,#ff84d6,#ffc2eb);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-      -webkit-text-stroke:.6px rgba(0,0,0,.5);
-      text-shadow:0 2px 5px rgba(0,0,0,.25),0 0 12px rgba(255,255,255,.6);
-      margin:15px auto 35px auto;max-width:700px;line-height:1.6;text-align:center;z-index:3}
-    .search-card{background:rgba(255,255,255,0.95);border-radius:22px;padding:20px 25px 25px;
-      box-shadow:0 6px 25px rgba(0,0,0,0.05);backdrop-filter:blur(10px);
-      max-width:700px;width:100%;margin-bottom:30px;z-index:3}
-    .search-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
-    #search-input,#category-select,#reset-btn{
-      padding:10px 18px;border-radius:25px;border:none;outline:none;
-      background:rgba(255,255,255,0.85);box-shadow:0 4px 14px rgba(0,0,0,0.05);
-      font-size:1rem;color:#6a4c93;transition:all .25s ease
-    }
-    #search-input:focus,#category-select:focus{background:#fff;box-shadow:0 0 12px rgba(226,186,255,0.6)}
-    #reset-btn{cursor:pointer;font-weight:600;color:#fff;
-      background:linear-gradient(135deg,#e2baff,#ffb6d9);
-      box-shadow:0 0 10px rgba(226,186,255,0.6)}
-    #reset-btn:hover{transform:scale(1.05)}
-    .card{background:rgba(255,255,255,0.9);border-radius:22px;padding:30px 40px;
-      box-shadow:0 6px 25px rgba(0,0,0,0.05);backdrop-filter:blur(10px);
-      max-width:700px;width:100%;margin-bottom:30px;z-index:3}
-    ul{display:flex;flex-wrap:wrap;justify-content:center;gap:15px;list-style:none;padding:0;margin:0}
-    li{background:#fff;border-radius:12px;padding:12px 20px;font-weight:500;color:#6a4c93;
-      box-shadow:0 2px 10px rgba(0,0,0,0.05);transition:transform .2s ease,box-shadow .2s ease}
-    li:hover{transform:translateY(-3px);box-shadow:0 4px 14px rgba(0,0,0,0.08)}
-    .hidden{display:none!important}
-    .no-results{width:100%;text-align:center;color:#b06ab3;font-weight:600;margin-top:10px;font-size:.95rem}
-    .highlight{background:linear-gradient(90deg,#ffe3f5,#e7c4ff);border-radius:5px;padding:0 3px}
-  </style>
+  <link rel="stylesheet" href="assets/css/styles.css">
 </head>
+
 <body>
   <main>
     <h1>Arochea’s Archives</h1>
     <p class="subtitle">A cozy corner of the Arochea world — where stories, characters, and memories are preserved with love.</p>
 
-    <!-- 🪄 NEW Search UI -->
     <div class="search-card">
       <div class="search-row">
         <select id="category-select">
@@ -78,6 +26,7 @@
         </select>
         <input type="text" id="search-input" placeholder="Search..." />
         <button id="reset-btn" title="Clear search">Reset</button>
+        <button id="browse-btn" title="Browse all">Browse</button>
       </div>
     </div>
 
@@ -103,195 +52,8 @@
   <footer>© 2025 Arochea’s Archives · Powered by TaurusTech</footer>
 
   <button id="music-toggle">🎵</button>
-  <audio id="bg-music" loop preload="auto" src="https://github.com/kcasko/arocheaplays/raw/refs/heads/main/assets/audio/whispering-stars.mp3"></audio>
+  <audio id="bg-music" loop preload="auto" src="assets/audio/whispering-stars.mp3"></audio>
 
-  <script>
-    // --- Centralized Data Store and Configuration ---
-    const archiveData = {
-      games: [],
-      packs: [],
-      items: []
-    };
-    
-    // Config mirroring the data contract for easy lookup
-    const config = {
-      games: { endpoint: '/api/games', listId: 'game-list', fieldName: 'Games' },
-      packs: { endpoint: '/api/packs', listId: 'pack-list', fieldName: 'Packs' },
-      items: { endpoint: '/api/items', listId: 'item-list', fieldName: 'Items' }
-    };
-
-    // --- DOM Elements ---
-    const input = document.getElementById('search-input');
-    const category = document.getElementById('category-select');
-    const reset = document.getElementById('reset-btn');
-    const lists = {
-      games: document.querySelector('#game-list'),
-      packs: document.querySelector('#pack-list'),
-      items: document.querySelector('#item-list')
-    };
-
-    // --- Core Search & Rendering Functions ---
-
-    /**
-     * Highlights matching substrings.
-     */
-    function highlightMatch(text, query){
-      if(!query) return text;
-      // Escape special characters in the query for safe use in RegExp
-      const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-      const regex = new RegExp(`(${escapedQuery})`,'gi');
-      return text.replace(regex,'<span class="highlight">$1</span>');
-    }
-
-    /**
-     * Renders the filtered data for a single section.
-     * @param {string} key 'games', 'packs', or 'items'
-     * @param {string[]} filteredItems An array of item names to render.
-     * @param {string} term The search term for highlighting.
-     */
-    function renderList(key, filteredItems, term) {
-      const list = lists[key];
-      const noMsg = list.parentElement.querySelector('.no-results');
-      
-      list.innerHTML = '';
-      
-      if (filteredItems.length === 0) {
-        // Show 'No results' only if a search term is present
-        noMsg.classList.toggle('hidden', !term);
-      } else {
-        // Hide 'No results' and render items
-        noMsg.classList.add('hidden');
-        filteredItems.forEach(itemText => {
-          const li = document.createElement('li');
-          // No need for .hidden here, as we only render visible items.
-          li.innerHTML = highlightMatch(itemText, term);
-          list.appendChild(li);
-        });
-      }
-    }
-
-    /**
-     * Performs the centralized search and triggers list rendering.
-     * This is the main function that drives the UI.
-     */
-    function performSearch(){
-      const term = input.value.trim().toLowerCase();
-      const cat = category.value; // 'games', 'packs', 'items', or 'all'
-      
-      // Iterate over each section (games, packs, items)
-      Object.entries(config).forEach(([key, conf]) => {
-        // 1. Filter Check: Is this section included in the category filter?
-        const isInCategory = (cat === 'all' || cat === key);
-
-        let filteredItems = [];
-
-        if (term && isInCategory) {
-          // 2. Data Filtering: Filter the in-memory data store
-          filteredItems = archiveData[key]
-            .filter(item => item.toLowerCase().includes(term));
-
-        } else if (!term && !isInCategory) {
-          // 3. Special Case: Empty term, but category is filtered to another section
-          // Lists should be empty/hidden for this section.
-          // filteredItems remains []
-
-        } else if (!term && isInCategory) {
-           // 4. Special Case: Empty term, category is 'all' or this section
-           // The request is to START HIDDEN, so we keep the list empty.
-           // filteredItems remains []
-           // If the requirement was to show all on empty search, we'd use: filteredItems = archiveData[key];
-        }
-
-        // 5. Render: Update the DOM for this section
-        renderList(key, filteredItems, term);
-      });
-    }
-
-    // --- Data Loading and Initialization ---
-
-    /**
-     * Fetches data, populates the in-memory store, and calls initial rendering.
-     * (Contract: loadSection)
-     */
-    async function loadSection(endpoint, listId, fieldName){
-      const key = listId.replace('-list', ''); // e.g., 'game-list' -> 'game'
-      const list = document.getElementById(listId);
-      const noMsg = list.parentElement.querySelector('.no-results');
-
-      try{
-        const res = await fetch(endpoint);
-        if(!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        const records = data.records || data;
-
-        if(!records?.length){
-          list.innerHTML = "<li class='error-msg'>No data found</li>";
-          noMsg.classList.remove('hidden'); 
-          return;
-        }
-        
-        // Populate In-Memory Data Store (CRITICAL CHANGE)
-        archiveData[key] = records.map(r => r.fields[fieldName] || "(Unnamed)");
-        
-        // Initial state is empty lists, so no initial render is needed.
-        list.innerHTML = "";
-        noMsg.classList.add('hidden');
-
-      }catch(err){
-        console.error(`Failed to load ${listId}:`, err);
-        list.innerHTML = "<li style='color:#e66;'>Error loading data</li>";
-        noMsg.classList.remove('hidden'); // Show card to make the error visible
-      }
-    }
-
-    // --- Event Wiring ---
-
-    document.addEventListener('DOMContentLoaded', () => {
-      // Load all data into the in-memory store
-      loadSection(config.games.endpoint, config.games.listId, config.games.fieldName);
-      loadSection(config.packs.endpoint, config.packs.listId, config.packs.fieldName);
-      loadSection(config.items.endpoint, config.items.listId, config.items.fieldName);
-
-      // Debounce utility (200ms)
-      let timer;
-      input.addEventListener('input', () => {
-        clearTimeout(timer);
-        timer = setTimeout(performSearch, 200);
-      });
-
-      // Category change is not debounced
-      category.addEventListener('change', performSearch);
-
-      // Reset button logic
-      reset.addEventListener('click', () => {
-        input.value = '';
-        category.value = 'all';
-        // Clearing the term and searching will re-hide all lists, as requested.
-        performSearch();
-      });
-
-      // Keyboard shortcuts
-      input.addEventListener('keydown', e => {
-        if(e.key === 'Escape'){ input.value = ''; performSearch(); e.preventDefault();}
-        if(e.key === 'Enter') { performSearch(); e.preventDefault();}
-      });
-
-      // --- Music Toggle (Unchanged) ---
-      const toggle=document.getElementById('music-toggle');
-      const music=document.getElementById('bg-music');
-      let playing=false;
-      toggle.addEventListener('click',async()=>{
-        try{
-          if(!playing){music.volume=0;await music.play();toggle.classList.add('active');
-            const fadeIn=setInterval(()=>{if(music.volume<0.5)music.volume+=0.05;else clearInterval(fadeIn);},200);
-            playing=true;
-          }else{
-            const fadeOut=setInterval(()=>{if(music.volume>0)music.volume-=0.05;else{clearInterval(fadeOut);music.pause();}},200);
-            toggle.classList.remove('active');playing=false;
-          }
-        }catch(e){console.warn('Autoplay blocked:',e);}
-      });
-    });
-  </script>
+  <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
