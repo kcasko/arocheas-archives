@@ -73,6 +73,8 @@ export function setupSearch() {
       const res = await fetch(endpoint);
       const data = await res.json();
       archiveData[key] = (data.records || []).map(r => r.fields[fieldName] || "(Unnamed)");
+      console.log(`✅ Loaded ${archiveData[key].length} ${key} from ${endpoint}`);
+console.log('Sample data:', data.records?.[0]);
     } catch (err) {
       console.error(`Failed to load ${key}:`, err);
     }
