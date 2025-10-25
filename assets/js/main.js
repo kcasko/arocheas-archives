@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Fetch helper
   async function loadSection(endpoint, listId, fieldName) {
-    const key = listId.replace("-list", ""); // e.g. 'game-list' -> 'game'
+    const key = listId.replace("-list", "s"); // makes 'game-list' → 'games'
     const list = document.getElementById(listId);
     const noMsg = list.parentElement.querySelector(".no-results");
 
