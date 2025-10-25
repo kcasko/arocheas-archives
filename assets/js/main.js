@@ -1,7 +1,7 @@
 import { setupSearch } from "./search.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const archiveData = { games: [], packs: [], items: [] };
+  window.archiveData = { games: [], packs: [], items: [] };
 
   const config = {
     games: { endpoint: "/api/games", listId: "game-list", fieldName: "Games" },
@@ -10,33 +10,41 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   async function loadSection(endpoint, listId, fieldName) {
-    const key = listId.replace("-list", "");
-    const list = document.getElementById(listId);
-    const noMsg = list.parentElement.querySelector(".no-results");
+  const key = listId.replace("-list", ""); // e.g. 'game-list' → 'game'
+  const list = document.getElementById(listId);
+  const noMsg = list.parentElement.querySelector(".no-results");
 
-    try {
-      const res = await fetch(endpoint);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      const records = data.records || [];
-      archiveData[key] = records.map(r => r.fields[fieldName] || "(Unnamed)");
-      noMsg.classList.add("hidden");
-      list.innerHTML = "";
-      console.log(`✅ Loaded ${archiveData[key].length} ${key}`);
-    } catch (err) {
-      console.error(`Failed to load ${listId}:`, err);
-      list.innerHTML = "<li style='color:#e66;'>Error loading data</li>";
-      noMsg.classList.remove("hidden");
-    }
+  try {
+    const res = await fetch(endpoint);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const records = data.records || [];
+
+    // Store data in the global archiveData
+    window.archiveData[key] = records.map(r => r.fields[fieldName] || "(Unnamed)");
+
+    noMsg.classList.add("hidden");
+    list.innerHTML = "";
+    console.log(`✅ Loaded ${window.archiveData[key].length} ${key}`);
+  } catch (err) {
+    console.error(`Failed to load ${listId}:`, err);
+    list.innerHTML = "<li style='color:#e66;'>Error loading data</li>";
+    noMsg.classList.remove("hidden");
   }
 
-  // Load all three data categories
-  loadSection(config.games.endpoint, config.games.listId, config.games.fieldName);
-  loadSection(config.packs.endpoint, config.packs.listId, config.packs.fieldName);
-  loadSection(config.items.endpoint, config.items.listId, config.items.fieldName);
+  // ✅ Return at the end of this function
+  return window.archiveData[key];
+}
 
-  // Setup search + browse UI
-  setupSearch(archiveData, config);
+  // Load all three data categories, then initialize search after all are complete
+Promise.all([
+  loadSection(config.games.endpoint, config.games.listId, config.games.fieldName),
+  loadSection(config.packs.endpoint, config.packs.listId, config.packs.fieldName),
+  loadSection(config.items.endpoint, config.items.listId, config.items.fieldName)
+]).then(() => {
+  console.log("✅ All data loaded, initializing search");
+  setupSearch(window.archiveData, config);
+});
 
   // 🎵 Background Music Toggle
   const toggle = document.getElementById("music-toggle");
