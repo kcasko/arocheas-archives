@@ -1,18 +1,24 @@
+// assets/js/main.js
 import { setupSearch } from "./search.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("🚀 Initializing Arochea’s Archives...");
+
   // Global store for all Airtable data
   window.archiveData = { games: [], packs: [], items: [] };
 
+  // Airtable endpoint configuration
   const config = {
     games: { endpoint: "/api/games", listId: "game-list", fieldName: "Games" },
     packs: { endpoint: "/api/packs", listId: "pack-list", fieldName: "Packs" },
     items: { endpoint: "/api/items", listId: "item-list", fieldName: "Items" }
   };
 
-  // Fetch helper
+  /**
+   * Load one category (Games, Packs, or Items) from the API
+   */
   async function loadSection(endpoint, listId, fieldName) {
-    const key = listId.replace("-list", "s"); // makes 'game-list' → 'games'
+    const key = listId.replace("-list", "s"); // e.g. 'game-list' → 'games'
     const list = document.getElementById(listId);
     const noMsg = list.parentElement.querySelector(".no-results");
 
@@ -22,13 +28,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
       const records = data.records || [];
 
+      // Store Airtable data into the global object
       window.archiveData[key] = records.map(r => r.fields[fieldName] || "(Unnamed)");
 
       noMsg.classList.add("hidden");
       list.innerHTML = "";
       console.log(`✅ Loaded ${window.archiveData[key].length} ${key}`);
     } catch (err) {
-      console.error(`Failed to load ${listId}:`, err);
+      console.error(`❌ Failed to load ${listId}:`, err);
       list.innerHTML = "<li style='color:#e66;'>Error loading data</li>";
       noMsg.classList.remove("hidden");
     }
@@ -36,19 +43,23 @@ document.addEventListener("DOMContentLoaded", () => {
     return window.archiveData[key];
   }
 
-  // 🧠 Wait for all sections to load, THEN init search
+  /**
+   * Load all Airtable data first, then start the search UI
+   */
   Promise.all([
     loadSection(config.games.endpoint, config.games.listId, config.games.fieldName),
     loadSection(config.packs.endpoint, config.packs.listId, config.packs.fieldName),
     loadSection(config.items.endpoint, config.items.listId, config.items.fieldName)
   ])
     .then(() => {
-      console.log("✅ All data loaded:", window.archiveData);
+      console.log("✅ All data loaded successfully:", window.archiveData);
       setupSearch(window.archiveData, config);
     })
     .catch(err => console.error("❌ Data load error:", err));
 
-  // 🎵 Background music toggle
+  /**
+   * 🎵 Background Music Toggle
+   */
   const toggle = document.getElementById("music-toggle");
   const music = document.getElementById("bg-music");
   let playing = false;
@@ -56,15 +67,19 @@ document.addEventListener("DOMContentLoaded", () => {
   toggle.addEventListener("click", async () => {
     try {
       if (!playing) {
+        // Fade in and start music
         music.volume = 0;
         await music.play();
         toggle.classList.add("active");
+
         const fadeIn = setInterval(() => {
           if (music.volume < 0.5) music.volume += 0.05;
           else clearInterval(fadeIn);
         }, 200);
+
         playing = true;
       } else {
+        // Fade out and pause
         const fadeOut = setInterval(() => {
           if (music.volume > 0) music.volume -= 0.05;
           else {
@@ -72,11 +87,12 @@ document.addEventListener("DOMContentLoaded", () => {
             music.pause();
           }
         }, 200);
+
         toggle.classList.remove("active");
         playing = false;
       }
     } catch (e) {
-      console.warn("Autoplay blocked:", e);
+      console.warn("⚠️ Autoplay blocked by browser:", e);
     }
   });
 });
