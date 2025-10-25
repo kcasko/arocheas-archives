@@ -73,7 +73,25 @@ export function setupSearch(archiveData, config) {
     document.querySelectorAll(".no-results").forEach(n => n.classList.add("hidden"));
   });
 
-  browse.addEventListener("click", () => performSearch({ browseMode: true }));
+  // --- Browse Toggle ---
+let browsing = false;
+
+browse.addEventListener("click", () => {
+  browsing = !browsing;
+
+  if (browsing) {
+    browse.textContent = "Hide";
+    browse.classList.add("active");
+    performSearch({ browseMode: true });
+  } else {
+    browse.textContent = "Browse";
+    browse.classList.remove("active");
+
+    // Clear all results and hide "no results" messages
+    Object.values(lists).forEach(list => (list.innerHTML = ""));
+    document.querySelectorAll(".no-results").forEach(msg => msg.classList.add("hidden"));
+  }
+});
 
   // Optional keyboard shortcuts
   input.addEventListener("keydown", e => {

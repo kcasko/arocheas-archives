@@ -154,6 +154,15 @@ p.subtitle {
   box-shadow: 0 0 15px rgba(200,200,255,0.7);
 }
 
+/* 🌸 Browse Button Active Glow */
+#browse-btn.active {
+  background: linear-gradient(135deg, #cde4ff, #ffd9ec);
+  box-shadow: 0 0 14px rgba(226, 186, 255, 0.7), 0 0 25px rgba(255, 200, 240, 0.5);
+  transform: scale(1.05);
+  color: #6a4c93;
+  transition: all 0.25s ease;
+}
+
 /* -------------------------------------------------------
 📦 CARD LAYOUTS (Games, Packs, Items)
 ------------------------------------------------------- */
