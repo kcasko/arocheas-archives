@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const archiveData = { games: [], packs: [], items: [] };
 
   const config = {
-    games: { endpoint: "/api/games", listId: "game-list", fieldName: "1. Games" },
-    packs: { endpoint: "/api/packs", listId: "pack-list", fieldName: "2. Packs" },
-    items: { endpoint: "/api/items", listId: "item-list", fieldName: "3. Items" }
+    games: { endpoint: "/api/games", listId: "game-list", fieldName: "Games" },
+    packs: { endpoint: "/api/packs", listId: "pack-list", fieldName: "Packs" },
+    items: { endpoint: "/api/items", listId: "item-list", fieldName: "Items" }
   };
 
   async function loadSection(endpoint, listId, fieldName) {
