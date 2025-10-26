@@ -6,12 +6,11 @@ export async function onRequestGet(context) {
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q")?.trim();
 
-  // Return empty if no query
   if (!q) {
     return new Response(JSON.stringify({ results: [] }), {
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*",
       },
     });
   }
@@ -20,7 +19,7 @@ export async function onRequestGet(context) {
   const headers = { Authorization: `Bearer ${API_KEY}` };
 
   try {
-    // 🔹 Fetch from Airtable
+    // Primary search across Airtable tables
     const results = await Promise.all(
       TABLES.map(async (table) => {
         let fields;
@@ -32,9 +31,8 @@ export async function onRequestGet(context) {
           fields = ["Packs"];
         }
 
-        // Case-insensitive partial search
         const filterFormula = `OR(${fields
-          .map(f => `FIND(LOWER("${q}"), LOWER({${f}}))`)
+          .map((f) => `FIND(LOWER("${q}"), LOWER({${f}}))`)
           .join(",")})`;
 
         const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(
@@ -46,7 +44,7 @@ export async function onRequestGet(context) {
 
         const data = await res.json();
 
-        return data.records.map(r => ({
+        return data.records.map((r) => ({
           id: r.id,
           source: table,
           name:
@@ -65,14 +63,14 @@ export async function onRequestGet(context) {
 
     let flatResults = results.flat();
 
-    // 🧠 Fuzzy fallback (for typos or near matches)
+    // 🪄 Fuzzy fallback if nothing matched
     if (flatResults.length === 0) {
       const fallbackResults = await Promise.all(
         TABLES.map(async (table) => {
           const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(table)}?pageSize=100`;
           const res = await fetch(url, { headers });
           const data = await res.json();
-          return data.records.map(r => ({
+          return data.records.map((r) => ({
             id: r.id,
             source: table,
             name:
@@ -89,6 +87,7 @@ export async function onRequestGet(context) {
         })
       );
 
+      // 🧠 Fuzzy filter with safe text handling
       flatResults = fuzzyFilter(fallbackResults.flat(), q);
     }
 
@@ -96,7 +95,7 @@ export async function onRequestGet(context) {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        "Cache-Control": "public, max-age=60"
+        "Cache-Control": "public, max-age=60",
       },
     });
   } catch (err) {
@@ -104,31 +103,33 @@ export async function onRequestGet(context) {
       status: 500,
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*",
       },
     });
   }
 }
 
 // ------------------------------------------------------------
-// 🪄 Simple fuzzy-match helper (Levenshtein distance scoring)
+// 🪄 Fuzzy-match helper (safe against null/undefined)
 // ------------------------------------------------------------
 function fuzzyFilter(items, query) {
   const normalized = query.toLowerCase();
   const scored = items
-    .map(item => {
-      const distance = levenshtein(normalized, item.name?.toLowerCase() || "");
-      const maxLen = Math.max(normalized.length, item.name?.length || 1);
-      const score = 1 - distance / maxLen; // 1 = perfect match, 0 = far
+    .map((item) => {
+      const name =
+        typeof item.name === "string" ? item.name.toLowerCase() : "";
+      const distance = levenshtein(normalized, name);
+      const maxLen = Math.max(normalized.length, name.length || 1);
+      const score = name ? 1 - distance / maxLen : 0;
       return { item, score };
     })
-    .filter(({ score }) => score > 0.4) // accept reasonably close matches
+    .filter(({ score }) => score > 0.4) // include close-enough matches
     .sort((a, b) => b.score - a.score);
 
   return scored.map(({ item }) => item);
 }
 
-// 🧮 Basic Levenshtein distance function
+// 🧮 Levenshtein distance algorithm
 function levenshtein(a, b) {
   const matrix = Array.from({ length: a.length + 1 }, (_, i) =>
     Array(b.length + 1).fill(0)
@@ -149,7 +150,7 @@ function levenshtein(a, b) {
   return matrix[a.length][b.length];
 }
 
-// CORS preflight
+// ------------------------------------------------------------
 export async function onRequestOptions() {
   return new Response(null, {
     status: 204,
