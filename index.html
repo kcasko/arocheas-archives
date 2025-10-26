@@ -6,6 +6,7 @@
   <title>Arochea’s Archives</title>
   <meta name="description" content="A cozy corner of the Arochea world where stories, characters, and memories are preserved with love.">
   <meta name="theme-color" content="#e2baff">
+
   <link rel="icon" href="/assets/favicon.png" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
@@ -24,39 +25,27 @@
       A cozy corner of the Arochea world — where stories, characters, and memories are preserved with love.
     </p>
 
+    <!-- 🔍 Search UI -->
     <div class="search-card">
       <div class="search-row">
         <select id="category-select">
-          <option value="all">All Categories</option>
+          <option value="all">All</option>
           <option value="games">Games</option>
           <option value="packs">Packs</option>
           <option value="items">Items</option>
         </select>
-        <input type="text" id="search-input" placeholder="Search..." />
-        <button id="reset-btn" title="Clear search">Reset</button>
-        <button id="browse-btn" title="Browse all">Browse</button>
+        <input type="text" id="search-input" placeholder="Search items, packs, or games..." />
       </div>
     </div>
 
-    <div class="card" data-category="games">
-      <h2>🎮 Games</h2>
-      <ul id="game-list"></ul>
-      <p class="no-results hidden">No games found.</p>
-    </div>
-
-    <div class="card" data-category="packs">
-      <h2>📦 Packs</h2>
-      <ul id="pack-list"></ul>
-      <p class="no-results hidden">No packs found.</p>
-    </div>
-
-    <div class="card" data-category="items">
-      <h2>🧸 Items</h2>
+    <!-- 🎨 Results Area -->
+    <div class="card" id="results-card">
+      <h2>Results</h2>
       <ul id="item-list"></ul>
-      <p class="no-results hidden">No items found.</p>
+      <p class="no-results hidden">No results found.</p>
     </div>
 
-    <!-- 🌸 Item Details Modal (enhanced for images + details) -->
+    <!-- 🌸 Item Details Modal -->
     <div id="item-modal" class="modal hidden">
       <div class="modal-content">
         <button id="modal-close" class="modal-close">×</button>
@@ -72,10 +61,7 @@
 
   <footer>© 2025 Arochea’s Archives · Powered by TaurusTech</footer>
 
-  <!-- MiniSearch library -->
-  <script src="https://cdn.jsdelivr.net/npm/minisearch@7.1.0/dist/umd/index.min.js"></script>
-
-  <!-- Main JS entry -->
+  <!-- 🚀 Main JS entry -->
   <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
