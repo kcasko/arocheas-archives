@@ -1,89 +1,141 @@
-export function setupSearch() {
-  const archiveData = { games: [], packs: [], items: [] };
-  const config = {
-    games: { endpoint: '/api/games', listId: 'game-list', fieldName: 'Games' },
-    packs: { endpoint: '/api/packs', listId: 'pack-list', fieldName: 'Packs' },
-    items: { endpoint: '/api/items', listId: 'item-list', fieldName: 'Items' }
-  };
+// assets/js/search.js
+export function setupSearch(archiveData, config) {
+  console.log("🧩 MiniSearch setup initializing...");
 
-  const input = document.getElementById('search-input');
-  const category = document.getElementById('category-select');
-  const reset = document.getElementById('reset-btn');
-  const browse = document.getElementById('browse-btn');
+  const input = document.getElementById("search-input");
+  const category = document.getElementById("category-select");
+  const reset = document.getElementById("reset-btn");
+  const browse = document.getElementById("browse-btn");
+
   const lists = {
-    games: document.querySelector('#game-list'),
-    packs: document.querySelector('#pack-list'),
-    items: document.querySelector('#item-list')
+    games: document.getElementById("game-list"),
+    packs: document.getElementById("pack-list"),
+    items: document.getElementById("item-list")
   };
 
-  // Highlight matches
+  // --- Build unified dataset for MiniSearch ---
+  const allItems = [
+    ...archiveData.games.map(name => ({ id: `g-${name}`, name, category: "games" })),
+    ...archiveData.packs.map(name => ({ id: `p-${name}`, name, category: "packs" })),
+    ...archiveData.items.map(name => ({ id: `i-${name}`, name, category: "items" }))
+  ];
+
+  // --- Initialize MiniSearch index ---
+  const miniSearch = new MiniSearch({
+    fields: ["name", "category"], // searchable fields
+    storeFields: ["name", "category"], // returned fields
+    searchOptions: {
+      fuzzy: 0.3,  // allow minor typos
+      prefix: true // partial word matches
+    }
+  });
+
+  miniSearch.addAll(allItems);
+  console.log(`✅ MiniSearch index built with ${allItems.length} entries`);
+
+  // --- Helper: highlight text matches ---
   function highlightMatch(text, query) {
     if (!query) return text;
-    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-    return text.replace(regex, '<span class="highlight">$1</span>');
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return text.replace(new RegExp(`(${escaped})`, "gi"), `<span class="highlight">$1</span>`);
   }
 
-  function renderList(key, items, term) {
+  // --- Render one category ---
+  function renderList(key, results, term) {
     const list = lists[key];
-    const noMsg = list.parentElement.querySelector('.no-results');
-    list.innerHTML = '';
-    if (!items.length) {
-      noMsg.classList.remove('hidden');
+    const noMsg = list.parentElement.querySelector(".no-results");
+    list.innerHTML = "";
+
+    const filtered = results.filter(r => r.category === key);
+
+    if (!filtered.length) {
+      noMsg.classList.remove("hidden");
       return;
     }
-    noMsg.classList.add('hidden');
-    items.forEach(txt => {
-      const li = document.createElement('li');
-      li.innerHTML = highlightMatch(txt, term);
+
+    noMsg.classList.add("hidden");
+    filtered.forEach(item => {
+      const li = document.createElement("li");
+      li.innerHTML = highlightMatch(item.name, term);
       list.appendChild(li);
     });
   }
 
-  function performSearch({ browse = false } = {}) {
+  // --- Core search logic ---
+  function performSearch({ browseMode = false } = {}) {
     const term = input.value.trim().toLowerCase();
-    const cat = category.value;
-    const showAll = browse || term === '*';
+    const selectedCat = category.value;
+    let results = [];
 
-    Object.entries(config).forEach(([key]) => {
-      const list = lists[key];
-      const noMsg = list.parentElement.querySelector('.no-results');
-      const isInCategory = (cat === 'all' || cat === key);
-      list.innerHTML = '';
-      noMsg.classList.add('hidden');
-      list.parentElement.style.display = 'none';
+    if (browseMode || !term) {
+      results = allItems;
+    } else {
+      // Sort by MiniSearch's internal relevance score
+      results = miniSearch.search(term).sort((a, b) => b.score - a.score);
+    }
 
-      if (!isInCategory) return;
-      let results = [];
-      if (showAll) results = archiveData[key];
-      else if (term) results = archiveData[key].filter(i => i.toLowerCase().includes(term));
+    // Determine which categories to show
+    const visibleCats = selectedCat === "all" ? Object.keys(lists) : [selectedCat];
 
-      if (results.length) {
-        renderList(key, results, term);
-        list.parentElement.style.display = 'block';
-      } else if (term) {
-        noMsg.classList.remove('hidden');
-        list.parentElement.style.display = 'block';
+    Object.keys(lists).forEach(cat => {
+      if (visibleCats.includes(cat)) {
+        renderList(cat, results, term);
+      } else {
+        lists[cat].innerHTML = "";
+        lists[cat].parentElement.querySelector(".no-results").classList.add("hidden");
       }
     });
   }
 
-  async function loadSection(endpoint, listId, fieldName) {
-    const key = listId.replace('-list', '');
-    try {
-      const res = await fetch(endpoint);
-      const data = await res.json();
-      archiveData[key] = (data.records || []).map(r => r.fields[fieldName] || "(Unnamed)");
-    } catch (err) {
-      console.error(`Failed to load ${key}:`, err);
+  // --- Browse Toggle ---
+  let browsing = false;
+  browse.addEventListener("click", () => {
+    browsing = !browsing;
+
+    if (browsing) {
+      browse.textContent = "Hide";
+      browse.classList.add("active");
+      performSearch({ browseMode: true });
+    } else {
+      browse.textContent = "Browse";
+      browse.classList.remove("active");
+      Object.values(lists).forEach(list => (list.innerHTML = ""));
+      document.querySelectorAll(".no-results").forEach(msg => msg.classList.add("hidden"));
     }
-  }
+  });
 
-  // Load data from live API
-  Object.values(config).forEach(c => loadSection(c.endpoint, c.listId, c.fieldName));
+  // --- Debounce for smoother search ---
+  let debounceTimer;
+  input.addEventListener("input", () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => performSearch(), 200);
+  });
 
-  // Events
-  input.addEventListener('input', () => performSearch());
-  category.addEventListener('change', () => performSearch());
-  reset.addEventListener('click', () => { input.value = ''; performSearch(); });
-  browse.addEventListener('click', () => { input.value = ''; performSearch({ browse: true }); });
+  category.addEventListener("change", performSearch);
+
+  // --- Reset everything ---
+  reset.addEventListener("click", () => {
+  input.value = "";
+  category.value = "all";
+  browsing = false;
+  browse.textContent = "Browse";
+  browse.classList.remove("active");
+  Object.values(lists).forEach(list => (list.innerHTML = ""));
+  document.querySelectorAll(".no-results").forEach(msg => msg.classList.add("hidden"));
+
+  // ✨ Add a cute pulse to show it's resetting
+  reset.classList.add("active");
+  setTimeout(() => reset.classList.remove("active"), 2000);
+});
+
+  // --- Keyboard shortcuts ---
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") performSearch();
+    if (e.key === "Escape") {
+      input.value = "";
+      performSearch();
+    }
+  });
+
+  console.log("✅ MiniSearch ready!");
 }

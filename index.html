@@ -12,6 +12,11 @@
 </head>
 
 <body>
+  <!-- 🌸 Soft loading overlay -->
+<div id="loading-screen">
+  <div class="loading-text">Loading Arochea’s Archives…</div>
+  <div class="sparkle"></div>
+</div>
   <main>
     <h1>Arochea’s Archives</h1>
     <p class="subtitle">A cozy corner of the Arochea world — where stories, characters, and memories are preserved with love.</p>
@@ -51,9 +56,10 @@
 
   <footer>© 2025 Arochea’s Archives · Powered by TaurusTech</footer>
 
-  <button id="music-toggle">🎵</button>
-  <audio id="bg-music" loop preload="auto" src="assets/audio/whispering-stars.mp3"></audio>
+<!-- MiniSearch library -->
+<script src="https://cdn.jsdelivr.net/npm/minisearch@7.1.0/dist/umd/index.min.js"></script>
 
-  <script type="module" src="assets/js/main.js"></script>
+<!-- Your main JS entry -->
+<script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
