@@ -13,13 +13,16 @@
 
 <body>
   <!-- 🌸 Soft loading overlay -->
-<div id="loading-screen">
-  <div class="loading-text">Loading Arochea’s Archives…</div>
-  <div class="sparkle"></div>
-</div>
+  <div id="loading-screen">
+    <div class="loading-text">Loading Arochea’s Archives…</div>
+    <div class="sparkle"></div>
+  </div>
+
   <main>
     <h1>Arochea’s Archives</h1>
-    <p class="subtitle">A cozy corner of the Arochea world — where stories, characters, and memories are preserved with love.</p>
+    <p class="subtitle">
+      A cozy corner of the Arochea world — where stories, characters, and memories are preserved with love.
+    </p>
 
     <div class="search-card">
       <div class="search-row">
@@ -52,14 +55,27 @@
       <ul id="item-list"></ul>
       <p class="no-results hidden">No items found.</p>
     </div>
+
+    <!-- 🌸 Item Details Modal (enhanced for images + details) -->
+    <div id="item-modal" class="modal hidden">
+      <div class="modal-content">
+        <button id="modal-close" class="modal-close">×</button>
+        <img class="modal-image" src="" alt="Item image">
+        <h3 class="modal-title"></h3>
+        <p><strong>Game:</strong> <span class="modal-game">—</span></p>
+        <p><strong>Pack:</strong> <span class="modal-pack">—</span></p>
+        <p><strong>Category:</strong> <span class="modal-category">—</span></p>
+        <p><strong>Subcategory:</strong> <span class="modal-subcategory">—</span></p>
+      </div>
+    </div>
   </main>
 
   <footer>© 2025 Arochea’s Archives · Powered by TaurusTech</footer>
 
-<!-- MiniSearch library -->
-<script src="https://cdn.jsdelivr.net/npm/minisearch@7.1.0/dist/umd/index.min.js"></script>
+  <!-- MiniSearch library -->
+  <script src="https://cdn.jsdelivr.net/npm/minisearch@7.1.0/dist/umd/index.min.js"></script>
 
-<!-- Your main JS entry -->
-<script type="module" src="assets/js/main.js"></script>
+  <!-- Main JS entry -->
+  <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>

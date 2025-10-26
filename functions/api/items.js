@@ -1,53 +1,69 @@
-// This is the complete, correct code for:
 // functions/api/items.js
-
 export async function onRequestGet(context) {
-  
-  // Get secrets from Cloudflare Pages settings
-  const { env } = context;
-  
-  // These variable names MUST match your Cloudflare settings
-  const API_KEY = env.AIRTABLE_API_KEY; 
+  const { env, request } = context;
+  const API_KEY = env.AIRTABLE_API_KEY;
   const BASE_ID = env.AIRTABLE_BASE_ID;
-  
-  // This MUST match your Airtable table name (it's case-sensitive)
-  const TABLE_NAME = "Items"; 
-
-  // This new line wraps TABLE_NAME in encodeURIComponent()
-  const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}`;
+  const TABLE_NAME = "Items";
 
   try {
+    // Get optional pagination offset
+    const { searchParams } = new URL(request.url);
+    const offset = searchParams.get("offset") || "";
+
+    // Build Airtable API URL
+    const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(
+      TABLE_NAME
+    )}?fields[]=Items&fields[]=Image&fields[]=Categories&fields[]=Sub%20Categories&view=Grid%20view${
+      offset ? `&offset=${offset}` : ""
+    }`;
+
     const res = await fetch(url, {
-      headers: {
-        // This line sends your key to Airtable
-        'Authorization': `Bearer ${API_KEY}`,
-      },
+      headers: { Authorization: `Bearer ${API_KEY}` },
     });
 
-    // Check if Airtable sent an error
     if (!res.ok) {
-       const errorData = await res.json();
-       throw new Error(errorData.error?.message || res.statusText);
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error?.message || res.statusText);
     }
-    
-    // Pass the good data (res.body) from Airtable to your website
-    return new Response(res.body, {
-      status: res.status,
+
+    const data = await res.json();
+
+    // Return full Airtable data with CORS + caching
+    return new Response(JSON.stringify(data), {
+      status: 200,
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*"
-      }
-    });
-
-  } catch (error) {
-    // This will catch any error (like a wrong key) 
-    // and send it to your browser
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=300", // 5 minutes cache
       },
     });
+  } catch (err) {
+    // Return structured error
+    return new Response(
+      JSON.stringify({
+        ok: false,
+        message: err.message,
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
+    );
   }
+}
+
+// Handle preflight CORS requests
+export async function onRequestOptions() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Max-Age": "86400", // Cache preflight 24h
+    },
+  });
 }
