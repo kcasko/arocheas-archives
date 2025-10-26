@@ -115,14 +115,18 @@ export function setupSearch(archiveData, config) {
 
   // --- Reset everything ---
   reset.addEventListener("click", () => {
-    input.value = "";
-    category.value = "all";
-    browsing = false;
-    browse.textContent = "Browse";
-    browse.classList.remove("active");
-    Object.values(lists).forEach(list => (list.innerHTML = ""));
-    document.querySelectorAll(".no-results").forEach(msg => msg.classList.add("hidden"));
-  });
+  input.value = "";
+  category.value = "all";
+  browsing = false;
+  browse.textContent = "Browse";
+  browse.classList.remove("active");
+  Object.values(lists).forEach(list => (list.innerHTML = ""));
+  document.querySelectorAll(".no-results").forEach(msg => msg.classList.add("hidden"));
+
+  // ✨ Add a cute pulse to show it's resetting
+  reset.classList.add("active");
+  setTimeout(() => reset.classList.remove("active"), 2000);
+});
 
   // --- Keyboard shortcuts ---
   input.addEventListener("keydown", e => {
