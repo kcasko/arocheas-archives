@@ -1,7 +1,9 @@
 // assets/js/search.js
 export function setupSearch(archiveData, config) {
   console.log("🧩 MiniSearch setup initializing...");
+  console.log("📦 Data received:", archiveData);
 
+  // Grab UI elements
   const input = document.getElementById("search-input");
   const category = document.getElementById("category-select");
   const reset = document.getElementById("reset-btn");
@@ -20,27 +22,33 @@ export function setupSearch(archiveData, config) {
     ...archiveData.items.map(name => ({ id: `i-${name}`, name, category: "items" }))
   ];
 
+  if (allItems.length === 0) {
+    console.warn("⚠️ MiniSearch: no data found to index!");
+  } else {
+    console.log(`✅ Building MiniSearch index with ${allItems.length} entries`);
+  }
+
   // --- Initialize MiniSearch index ---
   const miniSearch = new MiniSearch({
     fields: ["name", "category"], // searchable fields
     storeFields: ["name", "category"], // returned fields
     searchOptions: {
-      fuzzy: 0.3,  // allow minor typos
-      prefix: true // partial word matches
+      fuzzy: 0.3,  // allow slight typos
+      prefix: true // match partials
     }
   });
 
   miniSearch.addAll(allItems);
-  console.log(`✅ MiniSearch index built with ${allItems.length} entries`);
+  console.log("✅ MiniSearch index ready");
 
-  // --- Helper: highlight text matches ---
+  // --- Highlight matching query text ---
   function highlightMatch(text, query) {
     if (!query) return text;
     const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     return text.replace(new RegExp(`(${escaped})`, "gi"), `<span class="highlight">$1</span>`);
   }
 
-  // --- Render one category ---
+  // --- Render results inside a given category ---
   function renderList(key, results, term) {
     const list = lists[key];
     const noMsg = list.parentElement.querySelector(".no-results");
@@ -70,11 +78,11 @@ export function setupSearch(archiveData, config) {
     if (browseMode || !term) {
       results = allItems;
     } else {
-      // Sort by MiniSearch's internal relevance score
       results = miniSearch.search(term).sort((a, b) => b.score - a.score);
     }
 
-    // Determine which categories to show
+    console.log(`🔎 Search term: "${term}" | Results: ${results.length}`);
+
     const visibleCats = selectedCat === "all" ? Object.keys(lists) : [selectedCat];
 
     Object.keys(lists).forEach(cat => {
@@ -87,7 +95,7 @@ export function setupSearch(archiveData, config) {
     });
   }
 
-  // --- Browse Toggle ---
+  // --- Browse toggle ---
   let browsing = false;
   browse.addEventListener("click", () => {
     browsing = !browsing;
@@ -104,7 +112,7 @@ export function setupSearch(archiveData, config) {
     }
   });
 
-  // --- Debounce for smoother search ---
+  // --- Debounce input for smooth searching ---
   let debounceTimer;
   input.addEventListener("input", () => {
     clearTimeout(debounceTimer);
@@ -115,18 +123,17 @@ export function setupSearch(archiveData, config) {
 
   // --- Reset everything ---
   reset.addEventListener("click", () => {
-  input.value = "";
-  category.value = "all";
-  browsing = false;
-  browse.textContent = "Browse";
-  browse.classList.remove("active");
-  Object.values(lists).forEach(list => (list.innerHTML = ""));
-  document.querySelectorAll(".no-results").forEach(msg => msg.classList.add("hidden"));
-
-  // ✨ Add a cute pulse to show it's resetting
-  reset.classList.add("active");
-  setTimeout(() => reset.classList.remove("active"), 2000);
-});
+    input.value = "";
+    category.value = "all";
+    browsing = false;
+    browse.textContent = "Browse";
+    browse.classList.remove("active");
+    Object.values(lists).forEach(list => (list.innerHTML = ""));
+    document.querySelectorAll(".no-results").forEach(msg => msg.classList.add("hidden"));
+    reset.classList.add("active");
+    setTimeout(() => reset.classList.remove("active"), 2000);
+    console.log("🔄 Reset clicked — cleared all filters");
+  });
 
   // --- Keyboard shortcuts ---
   input.addEventListener("keydown", e => {
@@ -137,5 +144,5 @@ export function setupSearch(archiveData, config) {
     }
   });
 
-  console.log("✅ MiniSearch ready!");
+  console.log("✅ MiniSearch initialized successfully!");
 }

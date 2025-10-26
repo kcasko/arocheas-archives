@@ -14,16 +14,14 @@ document.addEventListener("DOMContentLoaded", () => {
     items: { endpoint: "/api/items", listId: "item-list", fieldName: "Items" }
   };
 
-  /**
-   * Load one category (Games, Packs, or Items) from the API
-   */
+  // Load one category (Games, Packs, or Items) from Airtable
   async function loadSection(endpoint, listId, fieldName) {
     const key = listId.replace("-list", "s");
     const list = document.getElementById(listId);
     const noMsg = list.parentElement.querySelector(".no-results");
     const card = list.parentElement;
 
-    // Show shimmer placeholders while loading
+    // Add shimmer placeholders while loading
     list.innerHTML = "";
     for (let i = 0; i < 4; i++) {
       const shimmer = document.createElement("div");
@@ -37,10 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
       const records = data.records || [];
 
-      // Store results in global archiveData
+      // Store results globally
       window.archiveData[key] = records.map(r => r.fields[fieldName] || "(Unnamed)");
 
-      // Remove shimmer + fade in the card
+      // Clean up + fade in
       list.innerHTML = "";
       card.classList.add("fade-in");
       noMsg.classList.add("hidden");
@@ -54,9 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return window.archiveData[key];
   }
 
-  /**
-   * Load all Airtable data first, then start the search UI
-   */
+  // Load all Airtable data, then initialize search
   Promise.all([
     loadSection(config.games.endpoint, config.games.listId, config.games.fieldName),
     loadSection(config.packs.endpoint, config.packs.listId, config.packs.fieldName),
@@ -65,14 +61,13 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(() => {
       console.log("✅ All data loaded successfully:", window.archiveData);
 
-      // 🌸 Fade out the loading overlay
+      // Fade out the loading screen
       const loader = document.getElementById("loading-screen");
       loader.classList.add("fade-out");
       setTimeout(() => loader.remove(), 1000);
 
-      // Initialize the search
+      // Initialize the MiniSearch setup
       setupSearch(window.archiveData, config);
     })
     .catch(err => console.error("❌ Data load error:", err));
-}); // ✅ closes document.addEventListener
-// End of assets/js/main.js
+});
